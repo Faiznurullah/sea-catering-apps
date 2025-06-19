@@ -91,32 +91,30 @@
       </div>
     </div>
   </section>
-
   <!-- Testimonials Preview -->
   <section class="testimonials">
     <div class="container">
       <h2>What Our Customers Say</h2>
-      <div class="testimonial-slider">
-        <div class="testimonial-card active">
-          <div class="rating">★★★★★</div>
-          <p class="testimonial-text">"SEA Catering has transformed my busy workweeks. Healthy, delicious meals without the hassle of cooking!"</p>
-          <p class="customer-name">- Anita S.</p>
+      <div class="testimonial-slider swiper">
+        <div class="swiper-wrapper">
+          <div class="testimonial-card swiper-slide">
+            <div class="rating">★★★★★</div>
+            <p class="testimonial-text">"SEA Catering has transformed my busy workweeks. Healthy, delicious meals without the hassle of cooking!"</p>
+            <p class="customer-name">- Anita S.</p>
+          </div>
+          <div class="testimonial-card swiper-slide">
+            <div class="rating">★★★★★</div>
+            <p class="testimonial-text">"The variety of meals keeps things interesting, and the nutritional information helps me stay on track with my fitness goals."</p>
+            <p class="customer-name">- Budi W.</p>
+          </div>
+          <div class="testimonial-card swiper-slide">
+            <div class="rating">★★★★☆</div>
+            <p class="testimonial-text">"Great service and the meals are always fresh. I appreciate the flexibility to change my subscription when needed."</p>
+            <p class="customer-name">- Diana P.</p>
+          </div>
         </div>
-        <div class="testimonial-card">
-          <div class="rating">★★★★★</div>
-          <p class="testimonial-text">"The variety of meals keeps things interesting, and the nutritional information helps me stay on track with my fitness goals."</p>
-          <p class="customer-name">- Budi W.</p>
-        </div>
-        <div class="testimonial-card">
-          <div class="rating">★★★★☆</div>
-          <p class="testimonial-text">"Great service and the meals are always fresh. I appreciate the flexibility to change my subscription when needed."</p>
-          <p class="customer-name">- Diana P.</p>
-        </div>
-      </div>
-      <div class="testimonial-dots">
-        <span class="dot active"></span>
-        <span class="dot"></span>
-        <span class="dot"></span>
+        <!-- Swiper pagination (dots) -->
+        <div class="swiper-pagination testimonial-dots"></div>
       </div>
     </div>
   </section>
@@ -132,5 +130,36 @@
 
 @endsection
 @section('javascript')
-<script src="{{ asset('js/scripts.js') }}"></script>
-@endsection 
+<script src="{{ asset('js/script.js') }}"></script>
+<script>
+// Initialize Swiper for testimonials
+document.addEventListener("DOMContentLoaded", function() {
+  const testimonialSwiper = new Swiper('.testimonial-slider', {
+    // Optional parameters
+    direction: 'horizontal',
+    loop: true,
+    autoplay: {
+      delay: 5000,
+      disableOnInteraction: false,
+    },
+    effect: 'fade',
+    fadeEffect: {
+      crossFade: true
+    },
+    // Pagination
+    pagination: {
+      el: '.swiper-pagination',
+      clickable: true,
+      renderBullet: function (index, className) {
+        return '<span class="' + className + ' dot"></span>';
+      },
+    },
+    // Navigation arrows (optional)
+    // navigation: {
+    //   nextEl: '.swiper-button-next',
+    //   prevEl: '.swiper-button-prev',
+    // },
+  });
+});
+</script>
+@endsection

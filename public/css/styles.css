@@ -315,19 +315,16 @@ section {
 }
 
 .testimonial-card {
-  position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
   padding: 30px;
   background-color: var(--white);
   border-radius: 10px;
   box-shadow: var(--shadow);
-  opacity: 0;
   transition: var(--transition);
-  transform: translateX(50px);
+  /* Remove absolute positioning for Swiper compatibility */
 }
 
+/* Keep the active class for backward compatibility */
 .testimonial-card.active {
   opacity: 1;
   transform: translateX(0);
@@ -364,7 +361,26 @@ section {
   transition: var(--transition);
 }
 
-.dot.active {
+.dot.active,
+.dot.swiper-pagination-bullet-active {
+  background-color: var(--primary-color);
+}
+
+/* Swiper specific styles to match existing design */
+.swiper-pagination {
+  position: static !important;
+  margin-top: 30px;
+}
+
+.swiper-pagination-bullet {
+  width: 12px;
+  height: 12px;
+  background-color: var(--border-color);
+  opacity: 1;
+  margin: 0 5px !important;
+}
+
+.swiper-pagination-bullet-active {
   background-color: var(--primary-color);
 }
 
