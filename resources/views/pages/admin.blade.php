@@ -15,8 +15,8 @@
           <div class="user-info">
             <div class="user-avatar admin-avatar">A</div>
             <div class="user-details">
-              <h3>Admin</h3>
-              <p>admin@seacatering.com</p>
+              <h3>{{ Auth::user()->name }}</h3>
+              <p>{{ Auth::user()->email }}</p>
             </div>
           </div>
           
@@ -44,15 +44,14 @@
               </select>
             </div>
           </div>
-          
-          <!-- Stats Cards -->
+            <!-- Stats Cards -->
           <div class="stats-grid">
             <div class="stat-card">
               <div class="stat-icon new-subscriptions-icon">📈</div>
               <div class="stat-content">
                 <h3>New Subscriptions</h3>
-                <p class="stat-value">128</p>
-                <p class="stat-change positive">+12% from last period</p>
+                <p class="stat-value">{{ $subscriptions->where('created_at', '>=', now()->subDays(30))->count() }}</p>
+                <p class="stat-change positive">This month</p>
               </div>
             </div>
             
@@ -60,17 +59,17 @@
               <div class="stat-icon mrr-icon">💰</div>
               <div class="stat-content">
                 <h3>Monthly Recurring Revenue</h3>
-                <p class="stat-value">Rp 87,450,000</p>
-                <p class="stat-change positive">+8% from last period</p>
+                <p class="stat-value">Rp {{ number_format($subscriptions->where('status', 'active')->sum('total_price'), 0, ',', '.') }}</p>
+                <p class="stat-change positive">Active subscriptions</p>
               </div>
             </div>
             
             <div class="stat-card">
               <div class="stat-icon reactivations-icon">🔄</div>
               <div class="stat-content">
-                <h3>Reactivations</h3>
-                <p class="stat-value">24</p>
-                <p class="stat-change positive">+15% from last period</p>
+                <h3>Pending Approvals</h3>
+                <p class="stat-value">{{ $subscriptions->where('status', 'pending')->count() }}</p>
+                <p class="stat-change {{ $subscriptions->where('status', 'pending')->count() > 0 ? 'warning' : 'positive' }}">Needs attention</p>
               </div>
             </div>
             
@@ -78,8 +77,8 @@
               <div class="stat-icon active-subs-icon">👥</div>
               <div class="stat-content">
                 <h3>Active Subscriptions</h3>
-                <p class="stat-value">1,245</p>
-                <p class="stat-change positive">+5% from last period</p>
+                <p class="stat-value">{{ $subscriptions->where('status', 'active')->count() }}</p>
+                <p class="stat-change positive">Currently active</p>
               </div>
             </div>
           </div>
@@ -114,18 +113,27 @@
               </div>
             </div>
           </div>
-          
-          <!-- Recent Subscriptions -->
+            <!-- Recent Subscriptions -->
           <div class="admin-card" id="subscriptions">
             <div class="card-header">
-              <h2>Recent Subscriptions</h2>
-              <a href="#" class="view-all">View All</a>
+              <h2>Subscription Management</h2>
+              <div class="card-header-actions">                <select id="status-filter" onchange="filterSubscriptions(this.value)">
+                  <option value="all">All Status</option>
+                  <option value="pending">Pending Approval</option>
+                  <option value="active">Active</option>
+                  <option value="paused">Paused</option>
+                  <option value="cancelled">Cancelled</option>
+                  <option value="rejected">Rejected</option>
+                </select>
+              </div>
             </div>
             <div class="card-content">
+              @if($subscriptions->count() > 0)
               <div class="table-responsive">
                 <table class="admin-table">
                   <thead>
                     <tr>
+                      <th>ID</th>
                       <th>Customer</th>
                       <th>Plan</th>
                       <th>Meal Types</th>
@@ -135,70 +143,94 @@
                       <th>Actions</th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <tr>
-                      <td>John Doe</td>
-                      <td>Protein Plan</td>
-                      <td>Breakfast, Dinner</td>
-                      <td>Mon, Wed, Fri</td>
-                      <td>Rp1,032,000</td>
-                      <td><span class="status active">Active</span></td>
+                  <tbody>                    @foreach($subscriptions as $subscription)
+                    <tr class="subscription-row" data-status="{{ $subscription->status }}" data-subscription-id="{{ $subscription->id }}">
+                      <td>#{{ $subscription->id }}</td>
+                      <td>
+                        <div class="customer-info">
+                          <strong>{{ $subscription->name }}</strong>
+                          <small>{{ $subscription->phone }}</small>
+                        </div>
+                      </td>
+                      <td>{{ $subscription->mealPlan->name }}</td>
+                      <td>
+                        <div class="meal-types">
+                          @foreach($subscription->subscriptionMeals as $meal)
+                            <span class="meal-tag">{{ ucfirst($meal->meal_type) }}</span>
+                          @endforeach
+                        </div>
+                      </td>
+                      <td>
+                        <div class="delivery-days">
+                          @foreach($subscription->deliveryDays as $day)
+                            <span class="day-tag">{{ ucfirst(substr($day->day_of_week, 0, 3)) }}</span>
+                          @endforeach
+                        </div>
+                      </td>
+                      <td>
+                        <strong>Rp{{ number_format($subscription->total_price, 0, ',', '.') }}</strong>
+                        @if($subscription->refund_amount > 0)
+                          <br><small class="refund-info">Credit: Rp{{ number_format($subscription->refund_amount, 0, ',', '.') }}</small>
+                        @endif
+                      </td>
+                      <td>
+                        <span class="status {{ $subscription->status }}">{{ ucfirst($subscription->status) }}</span>
+                        @if($subscription->status === 'paused' && $subscription->pause_end_date)
+                          <br><small>Until {{ $subscription->pause_end_date->format('d M Y') }}</small>
+                        @endif
+                      </td>
                       <td>
                         <div class="table-actions">
-                          <button class="action-btn view-btn" title="View Details">👁️</button>
-                          <button class="action-btn edit-btn" title="Edit">✏️</button>
+                          @if($subscription->status === 'pending')
+                            <button class="action-btn approve-btn" 
+                                    onclick="approveSubscription({{ $subscription->id }})" 
+                                    title="Approve">✅</button>
+                            <button class="action-btn reject-btn" 
+                                    onclick="rejectSubscription({{ $subscription->id }})" 
+                                    title="Reject">❌</button>
+                          @endif
+                          
+                          @if($subscription->status === 'active')
+                            <button class="action-btn pause-btn" 
+                                    onclick="pauseSubscription({{ $subscription->id }})" 
+                                    title="Pause">⏸️</button>
+                          @endif
+                          
+                          @if($subscription->status === 'paused')
+                            <button class="action-btn resume-btn" 
+                                    onclick="resumeSubscription({{ $subscription->id }})" 
+                                    title="Resume">▶️</button>
+                          @endif
+                          
+                          <button class="action-btn view-btn" 
+                                  onclick="viewSubscription({{ $subscription->id }})" 
+                                  title="View Details">👁️</button>
+                          
+                          @if($subscription->allergies)
+                            <button class="action-btn allergy-btn" 
+                                    onclick="viewAllergies('{{ addslashes($subscription->allergies) }}')" 
+                                    title="View Allergies">🚨</button>
+                          @endif
                         </div>
                       </td>
                     </tr>
-                    <tr>
-                      <td>Jane Smith</td>
-                      <td>Diet Plan</td>
-                      <td>Lunch</td>
-                      <td>Mon-Fri</td>
-                      <td>Rp645,000</td>
-                      <td><span class="status paused">Paused</span></td>
-                      <td>
-                        <div class="table-actions">
-                          <button class="action-btn view-btn" title="View Details">👁️</button>
-                          <button class="action-btn edit-btn" title="Edit">✏️</button>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Robert Johnson</td>
-                      <td>Royal Plan</td>
-                      <td>Breakfast, Lunch, Dinner</td>
-                      <td>Mon-Sun</td>
-                      <td>Rp5,418,000</td>
-                      <td><span class="status active">Active</span></td>
-                      <td>
-                        <div class="table-actions">
-                          <button class="action-btn view-btn" title="View Details">👁️</button>
-                          <button class="action-btn edit-btn" title="Edit">✏️</button>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Sarah Williams</td>
-                      <td>Protein Plan</td>
-                      <td>Breakfast, Lunch</td>
-                      <td>Mon, Wed, Fri</td>
-                      <td>Rp1,032,000</td>
-                      <td><span class="status active">Active</span></td>
-                      <td>
-                        <div class="table-actions">
-                          <button class="action-btn view-btn" title="View Details">👁️</button>
-                          <button class="action-btn edit-btn" title="Edit">✏️</button>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Michael Brown</td>
-                      <td>Diet Plan</td>
-                      <td>Dinner</td>
-                      <td>Mon-Fri</td>
-                      <td>Rp645,000</td>
-                      <td><span class="status cancelled">Cancelled</span></td>
+                    @endforeach
+                  </tbody>
+                </table>
+              </div>
+              
+              <!-- Pagination -->
+              <div class="pagination-wrapper">
+                {{ $subscriptions->links() }}
+              </div>
+              @else
+              <div class="empty-state">
+                <h3>No Subscriptions Found</h3>
+                <p>No subscription data available in the system.</p>
+              </div>
+              @endif
+            </div>
+          </div>
                       <td>
                         <div class="table-actions">
                           <button class="action-btn view-btn" title="View Details">👁️</button>
@@ -247,7 +279,6 @@
       </div>
     </div>
   </section>
-
   <!-- Custom Date Range Modal -->
   <div class="modal" id="date-range-modal">
     <div class="modal-content">
@@ -270,8 +301,79 @@
     </div>
   </div>
 
+  <!-- Subscription Detail Modal -->
+  <div class="modal" id="subscription-detail-modal" style="display: none;">
+    <div class="modal-content modal-large">
+      <span class="close-modal">&times;</span>
+      <h2>Subscription Details</h2>
+      <div id="subscription-detail-content">
+        <!-- Content will be loaded via AJAX -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Approve Subscription Modal -->
+  <div class="modal" id="approve-subscription-modal" style="display: none;">
+    <div class="modal-content">
+      <span class="close-modal">&times;</span>
+      <h2>Approve Subscription</h2>
+      <p>Are you sure you want to approve this subscription?</p>
+      <div class="subscription-summary" id="approve-subscription-summary">
+        <!-- Will be populated via JavaScript -->
+      </div>
+      <form id="approve-form" method="POST">
+        @csrf
+        @method('PATCH')
+        <div class="form-group">
+          <label for="approve-notes">Admin Notes (Optional)</label>
+          <textarea id="approve-notes" name="admin_notes" rows="3" placeholder="Add any notes about this approval..."></textarea>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" onclick="closeModal('approve-subscription-modal')">Cancel</button>
+          <button type="submit" class="btn-success">Approve Subscription</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Reject Subscription Modal -->
+  <div class="modal" id="reject-subscription-modal" style="display: none;">
+    <div class="modal-content">
+      <span class="close-modal">&times;</span>
+      <h2>Reject Subscription</h2>
+      <p class="warning-text">Are you sure you want to reject this subscription? This action cannot be undone.</p>
+      <form id="reject-form" method="POST">
+        @csrf
+        @method('PATCH')
+        <div class="form-group">
+          <label for="reject-reason">Reason for Rejection <span class="required">*</span></label>
+          <textarea id="reject-reason" name="rejection_reason" rows="3" required placeholder="Please provide a reason for rejection..."></textarea>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" onclick="closeModal('reject-subscription-modal')">Cancel</button>
+          <button type="submit" class="btn-danger">Reject Subscription</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Allergies Modal -->
+  <div class="modal" id="allergies-modal" style="display: none;">
+    <div class="modal-content">
+      <span class="close-modal">&times;</span>
+      <h2>Customer Allergies & Dietary Restrictions</h2>
+      <div class="allergy-content">
+        <div class="allergy-icon">🚨</div>
+        <div id="allergy-text"></div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-primary" onclick="closeModal('allergies-modal')">Close</button>
+      </div>
+    </div>
+  </div>
+
 @endsection
 @section('javascript')
 <script src="{{ asset('js/scripts.js') }}"></script>
-<script src="{{ asset('js/admin.js') }}"></script>
-@endsection 
+<script src="{{ asset('js/admin-subscription.js') }}"></script>
+@endsection

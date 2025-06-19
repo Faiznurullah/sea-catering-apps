@@ -149,4 +149,250 @@ class SubscriptionController extends Controller
         return redirect()->back()
             ->with('success', 'Status subscription berhasil diupdate!');
     }
+
+    /**
+     * Pause subscription
+     */
+    public function pauseSubscription(Request $request, $id)
+    {
+        // For admin AJAX requests, we don't need validation
+        if ($request->expectsJson() && $request->user()->role === 'admin') {
+            try {
+                $subscription = Subscription::findOrFail($id);
+                
+                if ($subscription->status !== 'active') {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Only active subscriptions can be paused.'
+                    ], 422);
+                }
+
+                // For admin pause, use default dates (immediate pause for 1 month)
+                $pauseStartDate = now()->format('Y-m-d');
+                $pauseEndDate = now()->addMonth()->format('Y-m-d');
+                
+                $refundAmount = $subscription->pauseSubscription($pauseStartDate, $pauseEndDate);
+
+                return response()->json([
+                    'success' => true,
+                    'message' => "Subscription paused successfully! Refund amount: Rp " . number_format($refundAmount, 0, ',', '.'),
+                    'subscription' => $subscription->fresh()->load(['mealPlan', 'subscriptionMeals', 'deliveryDays'])
+                ]);
+
+            } catch (\Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error pausing subscription: ' . $e->getMessage()
+                ], 500);
+            }
+        }
+
+        // Regular form submission requires validation
+        $validator = Validator::make($request->all(), [
+            'pause_start_date' => 'required|date|after_or_equal:today',
+            'pause_end_date' => 'required|date|after:pause_start_date',
+            'reason' => 'nullable|string|max:500'
+        ]);
+
+        if ($validator->fails()) {
+            // Check if request expects JSON (AJAX)
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        try {
+            $subscription = Subscription::findOrFail($id);
+            
+            if ($subscription->status !== 'active') {
+                $message = 'Only active subscriptions can be paused.';
+                if ($request->expectsJson()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => $message
+                    ], 422);
+                }
+                return redirect()->back()->with('error', $message);
+            }
+
+            $refundAmount = $subscription->pauseSubscription(
+                $request->pause_start_date,
+                $request->pause_end_date
+            );
+
+            $message = "Subscription paused successfully! Refund amount: Rp " . number_format($refundAmount, 0, ',', '.');
+            
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => $message,
+                    'refund_amount' => $refundAmount
+                ]);
+            }
+
+            return redirect()->back()->with('success', $message);
+
+        } catch (\Exception $e) {
+            $message = 'Error pausing subscription: ' . $e->getMessage();
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $message
+                ], 500);
+            }
+            return redirect()->back()->with('error', $message);
+        }
+    }
+
+    /**
+     * Resume subscription
+     */
+    public function resumeSubscription(Request $request, $id)
+    {
+        try {
+            $subscription = Subscription::findOrFail($id);
+            
+            if ($subscription->status !== 'paused') {
+                $message = 'Only paused subscriptions can be resumed.';
+                if ($request->expectsJson()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => $message
+                    ], 422);
+                }
+                return redirect()->back()->with('error', $message);
+            }
+
+            $subscription->resumeSubscription();
+
+            $message = 'Subscription resumed successfully!';
+            
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => $message,
+                    'subscription' => $subscription->fresh()->load(['mealPlan', 'subscriptionMeals', 'deliveryDays'])
+                ]);
+            }
+
+            return redirect()->back()->with('success', $message);
+
+        } catch (\Exception $e) {
+            $message = 'Error resuming subscription: ' . $e->getMessage();
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $message
+                ], 500);
+            }
+            return redirect()->back()->with('error', $message);
+        }
+    }
+
+    /**
+     * Approve subscription (Admin only)
+     */
+    public function approve(Request $request, $id)
+    {
+        try {
+            $subscription = Subscription::findOrFail($id);
+            
+            if ($subscription->status !== 'pending') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Only pending subscriptions can be approved.'
+                ], 422);
+            }
+
+            $subscription->update([
+                'status' => 'active',
+                'admin_notes' => $request->input('admin_notes'),
+                'approved_at' => now()
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Subscription approved successfully!',
+                'subscription' => $subscription->load(['mealPlan', 'subscriptionMeals', 'deliveryDays'])
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error approving subscription: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Reject subscription (Admin only)
+     */
+    public function reject(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'rejection_reason' => 'required|string|max:500'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        try {
+            $subscription = Subscription::findOrFail($id);
+            
+            if ($subscription->status !== 'pending') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Only pending subscriptions can be rejected.'
+                ], 422);
+            }
+
+            $subscription->update([
+                'status' => 'rejected',
+                'rejection_reason' => $request->input('rejection_reason'),
+                'rejected_at' => now()
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Subscription rejected successfully!',
+                'subscription' => $subscription->load(['mealPlan', 'subscriptionMeals', 'deliveryDays'])
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error rejecting subscription: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Get subscription details for admin view
+     */
+    public function getDetails($id)
+    {
+        try {
+            $subscription = Subscription::with(['mealPlan', 'subscriptionMeals', 'deliveryDays'])
+                ->findOrFail($id);
+
+            return response()->json([
+                'success' => true,
+                'subscription' => $subscription
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Subscription not found.'
+            ], 404);
+        }
+    }
 }

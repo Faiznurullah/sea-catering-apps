@@ -197,8 +197,8 @@
 }
 
 .status.paused {
-  background-color: rgba(241, 196, 15, 0.2);
-  color: #f39c12;
+  background-color: rgba(255, 193, 7, 0.2);
+  color: #856404;
 }
 
 .status.pending {
@@ -332,6 +332,62 @@
   justify-content: flex-end;
   gap: 10px;
   margin-top: 20px;
+}
+
+/* Pause subscription specific styles */
+.pause-info {
+  display: block;
+  margin-top: 5px;
+  font-size: 0.8rem;
+  color: #666;
+  font-style: italic;
+}
+
+.calculation-box {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 5px;
+  padding: 15px;
+  margin: 15px 0;
+}
+
+.calculation-box h4 {
+  margin: 0 0 10px 0;
+  color: #333;
+}
+
+.calculation-box .note {
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 10px;
+}
+
+.pause-btn, .resume-btn {
+  background-color: #ffc107;
+  color: #212529;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin: 2px;
+}
+
+.pause-btn:hover, .resume-btn:hover {
+  background-color: #e0a800;
+}
+
+.resume-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.resume-btn:hover {
+  background-color: #218838;
+}
+
+.required {
+  color: #dc3545;
 }
 
 /* Responsive Styles */

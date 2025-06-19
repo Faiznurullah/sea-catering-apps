@@ -34,6 +34,8 @@ Route::resource('experience', ExperienceUserController::class);
 // Home subscription management routes
 Route::get('/home/subscriptions', [SubscriptionController::class, 'manage'])->name('subscription.manage');
 Route::patch('/subscription/{id}/status', [SubscriptionController::class, 'updateStatus'])->name('subscription.updateStatus');
+Route::post('/subscription/{id}/pause', [SubscriptionController::class, 'pauseSubscription'])->name('subscription.pause');
+Route::post('/subscription/{id}/resume', [SubscriptionController::class, 'resumeSubscription'])->name('subscription.resume');
 
 
 Auth::routes(['verify' => true]);
@@ -50,4 +52,11 @@ Route::group(['middleware' => ['verified', 'CheckRole:user']], function () {
 Route::group(['middleware' => ['verified', 'CheckRole:admin']], function () {
 
     Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'admin'])->name('admin');
+    
+    // Admin subscription management routes
+    Route::patch('/subscriptions/{id}/approve', [App\Http\Controllers\SubscriptionController::class, 'approve'])->name('subscription.approve');
+    Route::patch('/subscriptions/{id}/reject', [App\Http\Controllers\SubscriptionController::class, 'reject'])->name('subscription.reject');
+    Route::get('/subscriptions/{id}/details', [App\Http\Controllers\SubscriptionController::class, 'getDetails'])->name('subscription.details');
+    Route::patch('/subscriptions/{id}/pause', [App\Http\Controllers\SubscriptionController::class, 'pauseSubscription'])->name('subscription.pause');
+    Route::patch('/subscriptions/{id}/resume', [App\Http\Controllers\SubscriptionController::class, 'resumeSubscription'])->name('subscription.resume');
 });
