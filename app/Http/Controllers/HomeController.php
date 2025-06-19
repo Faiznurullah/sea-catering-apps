@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Subscription;
 
 class HomeController extends Controller
 {
@@ -23,7 +24,13 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        // Ambil subscription data untuk ditampilkan di home
+        $subscriptions = Subscription::with(['mealPlan', 'subscriptionMeals', 'deliveryDays'])
+            ->orderBy('created_at', 'desc')
+            ->take(5) // Ambil 5 subscription terbaru
+            ->get();
+
+        return view('home', compact('subscriptions'));
     }
 
     public function profile()
@@ -31,11 +38,13 @@ class HomeController extends Controller
         return view('pages.profile');
     }
 
-
     public function admin()
     {
-        return view('pages.admin');
+        // Untuk admin, tampilkan semua subscription
+        $subscriptions = Subscription::with(['mealPlan', 'subscriptionMeals', 'deliveryDays'])
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+        return view('pages.admin', compact('subscriptions'));
     }
-
-
 }

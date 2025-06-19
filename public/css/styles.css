@@ -557,3 +557,39 @@ footer {
   border-radius: 4px;
   margin-bottom: 16px;
 }
+
+.mt-5{
+  margin-top: 5rem;
+}
+
+.btn-warning{
+  background-color: #f39c12;
+  color: var(--white);
+  padding: 8px 20px;
+  border-radius: 30px;
+  transition: var(--transition);
+} 
+
+.pause-btn{
+  background-color: #e74c3c;
+  color: var(--white);
+  padding: 8px 20px;
+  border-radius: 30px;
+  transition: var(--transition);
+}
+
+.resume-btn{
+  background-color: #2ecc71;
+  color: var(--white);
+  padding: 8px 20px;
+  border-radius: 30px;
+  transition: var(--transition);
+}
+
+.cancel-btn{
+  background-color: red;
+  color: var(--white);
+  padding: 8px 20px;
+  border-radius: 30px;
+  transition: var(--transition);
+}

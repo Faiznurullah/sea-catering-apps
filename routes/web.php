@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RouteController;
 use App\Http\Controllers\ExperienceUserController;
+use App\Http\Controllers\SubscriptionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,13 +21,19 @@ use App\Http\Controllers\ExperienceUserController;
 Route::get('/',  [RouteController::class, 'beranda'])->name('beranda');
 Route::get('/menu',  [RouteController::class, 'menu'])->name('menu');
 Route::get('/subscription',  [RouteController::class, 'subscription'])->name('subscription');
-Route::get('/contact',  [RouteController::class, 'contact'])->name('menu');
+Route::post('/subscription',  [RouteController::class, 'storeSubscription'])->name('subscription.store');
+Route::get('/contact',  [RouteController::class, 'contact'])->name('contact');
 
 // Register Post route
 Route::post('/register', [RegisterController::class, 'register'])->name('register.store.custom');
  
 
 Route::resource('experience', ExperienceUserController::class);
+
+
+// Home subscription management routes
+Route::get('/home/subscriptions', [SubscriptionController::class, 'manage'])->name('subscription.manage');
+Route::patch('/subscription/{id}/status', [SubscriptionController::class, 'updateStatus'])->name('subscription.updateStatus');
 
 
 Auth::routes(['verify' => true]);

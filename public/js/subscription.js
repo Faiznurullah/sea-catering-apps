@@ -87,7 +87,6 @@ document.addEventListener("DOMContentLoaded", () => {
   deliveryDayCheckboxes.forEach((checkbox) => {
     checkbox.addEventListener("change", updatePrice)
   })
-
   // Form validation and submission
   subscriptionForm.addEventListener("submit", (event) => {
     event.preventDefault()
@@ -126,19 +125,60 @@ document.addEventListener("DOMContentLoaded", () => {
       deliveryDayError.classList.remove("show")
     }
 
-    // If form is valid, show success modal
+    // If form is valid, submit via AJAX
     if (isValid) {
-      const summaryData = updatePrice()
+      const formData = new FormData(subscriptionForm)
+      
+      // Show loading state
+      const submitBtn = subscriptionForm.querySelector('.submit-btn')
+      const originalText = submitBtn.textContent
+      submitBtn.textContent = 'Processing...'
+      submitBtn.disabled = true
 
-      // Update modal with subscription details
-      modalPlan.textContent = summaryData.plan
-      modalMealTypes.textContent = summaryData.mealTypes.join(", ")
-      modalDeliveryDays.textContent = summaryData.deliveryDays.join(", ")
-      modalTotal.textContent = summaryData.total
+      // Submit form via AJAX
+      fetch(subscriptionForm.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          const summaryData = updatePrice()
 
-      // Show success modal
-      successModal.style.display = "block"
-      document.body.style.overflow = "hidden"
+          // Update modal with subscription details
+          modalPlan.textContent = summaryData.plan
+          modalMealTypes.textContent = summaryData.mealTypes.join(", ")
+          modalDeliveryDays.textContent = summaryData.deliveryDays.join(", ")
+          modalTotal.textContent = summaryData.total
+
+          // Show success modal
+          successModal.style.display = "block"
+          document.body.style.overflow = "hidden"
+        } else {
+          // Handle validation errors
+          if (data.errors) {
+            let errorMessage = 'Please fix the following errors:\n'
+            for (let field in data.errors) {
+              errorMessage += '- ' + data.errors[field].join('\n- ') + '\n'
+            }
+            alert(errorMessage)
+          } else {
+            alert(data.message || 'An error occurred while creating subscription')
+          }
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error)
+        alert('An error occurred while creating subscription')
+      })
+      .finally(() => {
+        // Reset loading state
+        submitBtn.textContent = originalText
+        submitBtn.disabled = false
+      })
     }
   })
 

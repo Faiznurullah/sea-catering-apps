@@ -21,7 +21,8 @@
     <div class="container">
       <div class="form-container">
         <h2>Create Your Subscription</h2>
-        <form id="subscription-form" class="subscription-form">
+        <form id="subscription-form" class="subscription-form" action="{{ route('subscription.store') }}" method="POST">
+          @csrf
           <!-- Personal Information -->
           <div class="form-section">
             <h3>Personal Information</h3>
@@ -76,18 +77,17 @@
           <!-- Meal Types -->
           <div class="form-section">
             <h3>Meal Types <span class="required">*</span></h3>
-            <p class="section-description">Select at least one meal type</p>
-            <div class="checkbox-group">
+            <p class="section-description">Select at least one meal type</p>            <div class="checkbox-group">
               <div class="checkbox-option">
-                <input type="checkbox" id="breakfast" name="meal-type" value="breakfast" class="meal-type-checkbox">
+                <input type="checkbox" id="breakfast" name="meal-type[]" value="breakfast" class="meal-type-checkbox">
                 <label for="breakfast">Breakfast</label>
               </div>
               <div class="checkbox-option">
-                <input type="checkbox" id="lunch" name="meal-type" value="lunch" class="meal-type-checkbox">
+                <input type="checkbox" id="lunch" name="meal-type[]" value="lunch" class="meal-type-checkbox">
                 <label for="lunch">Lunch</label>
               </div>
               <div class="checkbox-option">
-                <input type="checkbox" id="dinner" name="meal-type" value="dinner" class="meal-type-checkbox">
+                <input type="checkbox" id="dinner" name="meal-type[]" value="dinner" class="meal-type-checkbox">
                 <label for="dinner">Dinner</label>
               </div>
             </div>
@@ -97,34 +97,33 @@
           <!-- Delivery Days -->
           <div class="form-section">
             <h3>Delivery Days <span class="required">*</span></h3>
-            <p class="section-description">Select the days you want your meals delivered</p>
-            <div class="checkbox-group days-group">
+            <p class="section-description">Select the days you want your meals delivered</p>            <div class="checkbox-group days-group">
               <div class="checkbox-option">
-                <input type="checkbox" id="monday" name="delivery-day" value="monday" class="delivery-day-checkbox">
+                <input type="checkbox" id="monday" name="delivery-day[]" value="monday" class="delivery-day-checkbox">
                 <label for="monday">Monday</label>
               </div>
               <div class="checkbox-option">
-                <input type="checkbox" id="tuesday" name="delivery-day" value="tuesday" class="delivery-day-checkbox">
+                <input type="checkbox" id="tuesday" name="delivery-day[]" value="tuesday" class="delivery-day-checkbox">
                 <label for="tuesday">Tuesday</label>
               </div>
               <div class="checkbox-option">
-                <input type="checkbox" id="wednesday" name="delivery-day" value="wednesday" class="delivery-day-checkbox">
+                <input type="checkbox" id="wednesday" name="delivery-day[]" value="wednesday" class="delivery-day-checkbox">
                 <label for="wednesday">Wednesday</label>
               </div>
               <div class="checkbox-option">
-                <input type="checkbox" id="thursday" name="delivery-day" value="thursday" class="delivery-day-checkbox">
+                <input type="checkbox" id="thursday" name="delivery-day[]" value="thursday" class="delivery-day-checkbox">
                 <label for="thursday">Thursday</label>
               </div>
               <div class="checkbox-option">
-                <input type="checkbox" id="friday" name="delivery-day" value="friday" class="delivery-day-checkbox">
+                <input type="checkbox" id="friday" name="delivery-day[]" value="friday" class="delivery-day-checkbox">
                 <label for="friday">Friday</label>
               </div>
               <div class="checkbox-option">
-                <input type="checkbox" id="saturday" name="delivery-day" value="saturday" class="delivery-day-checkbox">
+                <input type="checkbox" id="saturday" name="delivery-day[]" value="saturday" class="delivery-day-checkbox">
                 <label for="saturday">Saturday</label>
               </div>
               <div class="checkbox-option">
-                <input type="checkbox" id="sunday" name="delivery-day" value="sunday" class="delivery-day-checkbox">
+                <input type="checkbox" id="sunday" name="delivery-day[]" value="sunday" class="delivery-day-checkbox">
                 <label for="sunday">Sunday</label>
               </div>
             </div>
