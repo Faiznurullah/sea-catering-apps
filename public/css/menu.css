@@ -1,0 +1,303 @@
+/* Menu Page Styles */
+.page-header {
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url("/placeholder.svg?height=400&width=1200");
+  background-size: cover;
+  background-position: center;
+  color: var(--white);
+  text-align: center;
+  padding: 120px 0 60px;
+}
+
+.page-header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+}
+
+/* Plan Tabs */
+.plan-tabs {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.plan-tab {
+  background: none;
+  border: none;
+  padding: 15px 30px;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--light-text);
+  cursor: pointer;
+  position: relative;
+  transition: var(--transition);
+}
+
+.plan-tab:hover {
+  color: var(--primary-color);
+}
+
+.plan-tab.active {
+  color: var(--primary-color);
+}
+
+.plan-tab.active::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: var(--primary-color);
+}
+
+/* Plan Content */
+.plan-content {
+  display: none;
+}
+
+.plan-content.active {
+  display: block;
+}
+
+.plan-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.plan-header h2 {
+  margin-bottom: 10px;
+}
+
+.plan-header .price {
+  font-size: 1.2rem;
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.plan-description {
+  max-width: 800px;
+  margin: 0 auto 40px;
+  text-align: center;
+}
+
+.plan-description p {
+  margin-bottom: 20px;
+}
+
+.plan-features {
+  text-align: left;
+  max-width: 600px;
+  margin: 0 auto 30px;
+  padding-left: 20px;
+}
+
+.plan-features li {
+  margin-bottom: 10px;
+  position: relative;
+  padding-left: 25px;
+}
+
+.plan-features li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--primary-color);
+  font-weight: bold;
+}
+
+/* Meal Grid */
+.meal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  margin-top: 40px;
+}
+
+.meal-card {
+  background-color: var(--white);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+}
+
+.meal-card:hover {
+  transform: translateY(-10px);
+}
+
+.meal-image {
+  height: 200px;
+  overflow: hidden;
+}
+
+.meal-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: var(--transition);
+}
+
+.meal-card:hover .meal-image img {
+  transform: scale(1.05);
+}
+
+.meal-card h3 {
+  padding: 20px 20px 10px;
+}
+
+.meal-card p {
+  padding: 0 20px;
+  color: var(--light-text);
+}
+
+.meal-calories {
+  padding: 10px 20px 20px !important;
+  color: var(--primary-color) !important;
+  font-weight: 500;
+}
+
+/* Modal Styles */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 1001;
+  overflow-y: auto;
+}
+
+.modal-content {
+  background-color: var(--white);
+  margin: 50px auto;
+  padding: 30px;
+  width: 80%;
+  max-width: 900px;
+  border-radius: 10px;
+  position: relative;
+}
+
+.close-modal {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 28px;
+  font-weight: bold;
+  color: var(--light-text);
+  cursor: pointer;
+}
+
+.modal-plan-content {
+  display: none;
+}
+
+.modal-plan-content h2 {
+  margin-bottom: 30px;
+}
+
+.modal-plan-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+.modal-section h3 {
+  margin-bottom: 15px;
+  color: var(--primary-color);
+}
+
+.modal-section ul {
+  list-style: disc;
+  padding-left: 20px;
+  margin-bottom: 15px;
+}
+
+.modal-section ul li {
+  margin-bottom: 8px;
+}
+
+.modal-section p {
+  margin-bottom: 8px;
+}
+
+/* Testimonial Form */
+.add-testimonial {
+  background-color: var(--light-bg);
+}
+
+.testimonial-form {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+.form-group textarea {
+  resize: vertical;
+}
+
+.rating-select {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+}
+
+.rating-select input {
+  display: none;
+}
+
+.rating-select label {
+  font-size: 30px;
+  color: #ddd;
+  cursor: pointer;
+  margin: 0 5px;
+}
+
+.rating-select label:hover,
+.rating-select label:hover ~ label,
+.rating-select input:checked ~ label {
+  color: #f1c40f;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .plan-tabs {
+    flex-wrap: wrap;
+  }
+
+  .plan-tab {
+    padding: 10px 20px;
+    font-size: 1rem;
+  }
+
+  .modal-content {
+    width: 95%;
+    padding: 20px;
+  }
+
+  .modal-plan-info {
+    grid-template-columns: 1fr;
+  }
+}
