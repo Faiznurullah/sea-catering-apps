@@ -25,9 +25,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Debug: Log found elements
     console.log('Edit button found:', !!editAccountBtn);
     console.log('Account form found:', !!accountForm);
-    
-    // Form fields
-    const formFields = ['name', 'email', 'phone', 'city', 'national'];
+      // Form fields
+    const formFields = ['name', 'email', 'phone', 'city', 'national', 'language'];
 
     // Store original values for reset
     let originalValues = {};
@@ -72,13 +71,16 @@ document.addEventListener('DOMContentLoaded', function() {
     if (editAccountBtn) {
         editAccountBtn.addEventListener('click', function() {
             console.log('Edit button clicked');
-            
-            formFields.forEach(field => {
+              formFields.forEach(field => {
                 const input = document.getElementById(field);
                 if (input) {
-                    input.removeAttribute('readonly');
-                    input.style.backgroundColor = '#fff';
-                    input.style.borderColor = '#ced4da';
+                    if (input.tagName === 'SELECT') {
+                        input.removeAttribute('disabled');
+                    } else {
+                        input.removeAttribute('readonly');
+                        input.style.backgroundColor = '#fff';
+                        input.style.borderColor = '#ced4da';
+                    }
                     console.log(`Field ${field} enabled`);
                 }
             });
@@ -103,15 +105,18 @@ document.addEventListener('DOMContentLoaded', function() {
     if (cancelAccountBtn) {
         cancelAccountBtn.addEventListener('click', function() {
             console.log('Cancel button clicked');
-            
-            // Reset form to original values
+              // Reset form to original values
             formFields.forEach(field => {
                 const input = document.getElementById(field);
                 if (input) {
                     input.value = originalValues[field] || '';
-                    input.setAttribute('readonly', true);
-                    input.style.backgroundColor = '#f8f9fa';
-                    input.style.borderColor = '#ced4da';
+                    if (input.tagName === 'SELECT') {
+                        input.setAttribute('disabled', true);
+                    } else {
+                        input.setAttribute('readonly', true);
+                        input.style.backgroundColor = '#f8f9fa';
+                        input.style.borderColor = '#ced4da';
+                    }
                 }
             });
             

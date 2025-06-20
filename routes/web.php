@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RouteController;
 use App\Http\Controllers\ExperienceUserController;
 use App\Http\Controllers\SubscriptionController;
+use App\Models\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +20,16 @@ use App\Http\Controllers\SubscriptionController;
 */
 
 Route::get('/',  [RouteController::class, 'beranda'])->name('beranda');
+Route::get('/language/{locale}', function($locale) {
+    if (in_array($locale, ['en', 'id'])) {
+        session(['locale' => $locale]);
+        if (Auth::check()) {
+            User::where('id', Auth::id())->update(['language' => $locale]);
+        }
+    }
+    return redirect()->back();
+})->name('language.switch');
+
 Route::get('/menu',  [RouteController::class, 'menu'])->name('menu');
 Route::get('/subscription',  [RouteController::class, 'subscription'])->name('subscription');
 Route::post('/subscription',  [RouteController::class, 'storeSubscription'])->name('subscription.store');

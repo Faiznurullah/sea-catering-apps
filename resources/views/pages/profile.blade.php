@@ -209,48 +209,53 @@
         <!-- Profile Content -->
         <div class="profile-content">
           <!-- Account Information -->
-          <div class="profile-card">
-            <div class="card-header">
-              <h2>Account Information</h2>
-              <button class="btn-secondary edit-btn" id="edit-account-btn">Edit</button>
+          <div class="profile-card">            <div class="card-header">
+              <h2>{{ __('profile.account_information') }}</h2>
+              <button class="btn-secondary edit-btn" id="edit-account-btn">{{ __('profile.edit') }}</button>
             </div>
             <div class="card-content">
               <form id="account-form" class="profile-form" enctype="multipart/form-data">
                 @csrf
                 <div class="form-group">
-                  <label for="name">Full Name</label>
+                  <label for="name">{{ __('profile.full_name') }}</label>
                   <input type="text" id="name" name="name" value="{{ $user->name }}" readonly>
                 </div>
                 
                 <div class="form-group">
-                  <label for="email">Email Address</label>
+                  <label for="email">{{ __('profile.email_address') }}</label>
                   <input type="email" id="email" name="email" value="{{ $user->email }}" readonly>
                 </div>
                 
                 <div class="form-group">
-                  <label for="phone">Phone Number</label>
+                  <label for="phone">{{ __('profile.phone_number') }}</label>
                   <input type="tel" id="phone" name="phone" value="{{ $user->phone ?? '' }}" readonly>
                 </div>
                 
                 <div class="form-group">
-                  <label for="city">City</label>
+                  <label for="city">{{ __('profile.city') }}</label>
                   <input type="text" id="city" name="city" value="{{ $user->city ?? '' }}" readonly>
                 </div>
-                
-                <div class="form-group">
-                  <label for="national">Nationality</label>
+                  <div class="form-group">
+                  <label for="national">{{ __('profile.nationality') }}</label>
                   <input type="text" id="national" name="national" value="{{ $user->national ?? '' }}" readonly>
                 </div>
                 
-                <div class="form-group" id="foto-group" style="display: none;">
-                  <label for="foto">Profile Photo</label>
+                <div class="form-group">
+                  <label for="language">{{ __('profile.language') }}</label>
+                  <select id="language" name="language" disabled>
+                    <option value="en" {{ ($user->language ?? 'en') == 'en' ? 'selected' : '' }}>{{ __('profile.english') }}</option>
+                    <option value="id" {{ ($user->language ?? 'en') == 'id' ? 'selected' : '' }}>{{ __('profile.indonesian') }}</option>
+                  </select>
+                </div>
+                  <div class="form-group" id="foto-group" style="display: none;">
+                  <label for="foto">{{ __('profile.profile_photo') }}</label>
                   <input type="file" id="foto" name="foto" accept="image/*">
-                  <small>Choose a new profile photo (optional)</small>
+                  <small>{{ __('profile.choose_new_photo') }}</small>
                 </div>
                 
                 <div class="form-actions" id="account-actions" style="display: none;">
-                  <button type="button" class="btn-secondary" id="cancel-account-btn">Cancel</button>
-                  <button type="submit" class="btn-primary">Save Changes</button>
+                  <button type="button" class="btn-secondary" id="cancel-account-btn">{{ __('profile.cancel') }}</button>
+                  <button type="submit" class="btn-primary">{{ __('profile.save_changes') }}</button>
                 </div>
               </form>
             </div>
@@ -298,37 +303,7 @@
             </div>
           </div>
 
-          <!-- Preferences -->
-          <div class="profile-card">
-            <div class="card-header">
-              <h2>Preferences</h2>
-            </div>
-            <div class="card-content">
-              <form id="preferences-form" class="profile-form">
-                <div class="form-group">
-                  <label for="language">Language</label>
-                  <select id="language" name="language">
-                    <option value="en" selected>English</option>
-                    <option value="id">Bahasa Indonesia</option>
-                  </select>
-                </div>
-                
-                <div class="form-group">
-                  <label for="timezone">Timezone</label>
-                  <select id="timezone" name="timezone">
-                    <option value="Asia/Jakarta" selected>Asia/Jakarta (WIB)</option>
-                    <option value="Asia/Makassar">Asia/Makassar (WITA)</option>
-                    <option value="Asia/Jayapura">Asia/Jayapura (WIT)</option>
-                  </select>
-                </div> 
-                
-                
-                <div class="form-actions">
-                  <button type="submit" class="btn-primary">Save Preferences</button>
-                </div>
-              </form>
-            </div>
-          </div>  
+           
            
         </div>
       </div>

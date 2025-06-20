@@ -47,13 +47,13 @@ class HomeController extends Controller
      */    public function updateProfile(Request $request)
     {
         $userId = Auth::id();
-        
-        $validator = Validator::make($request->all(), [
+          $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $userId,
             'phone' => 'nullable|string|max:20',
             'city' => 'nullable|string|max:255',
             'national' => 'nullable|string|max:255',
+            'language' => 'nullable|string|in:en,id',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
@@ -65,13 +65,13 @@ class HomeController extends Controller
             ], 422);
         }
 
-        try {
-            $updateData = [
+        try {            $updateData = [
                 'name' => $request->name,
                 'email' => $request->email,
                 'phone' => $request->phone,
                 'city' => $request->city,
-                'national' => $request->national
+                'national' => $request->national,
+                'language' => $request->language ?? 'en'
             ];
 
             // Handle file upload

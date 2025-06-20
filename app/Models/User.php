@@ -31,6 +31,7 @@ class User extends Authenticatable implements MustVerifyEmail, AuthenticatableCo
         'phone',
         'city',
         'national',
+        'language',
         'google_id',
         'point',
         'email_verified_at'
