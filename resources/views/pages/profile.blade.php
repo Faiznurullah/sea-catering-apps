@@ -290,31 +290,11 @@
                   <p>Last changed 3 months ago</p>
                 </div>
                 <div class="security-actions">
-                  <button class="btn-secondary" id="change-password-btn">Change Password</button>
+                  <a href="/password/reset" class="btn-secondary">Change Password</a>
                 </div>
               </div>
-
-              <!-- Two-Factor Authentication -->
-              <div class="security-item">
-                <div class="security-info">
-                  <h3>Two-Factor Authentication</h3>
-                  <p>Add an extra layer of security to your account</p>
-                </div>
-                <div class="security-actions">
-                  <button class="btn-secondary" id="enable-2fa-btn">Enable 2FA</button>
-                </div>
-              </div>
-
-              <!-- Login Sessions -->
-              <div class="security-item">
-                <div class="security-info">
-                  <h3>Active Sessions</h3>
-                  <p>Manage your active login sessions</p>
-                </div>
-                <div class="security-actions">
-                  <button class="btn-secondary" id="manage-sessions-btn">Manage Sessions</button>
-                </div>
-              </div>
+ 
+              
             </div>
           </div>
 
@@ -340,48 +320,15 @@
                     <option value="Asia/Makassar">Asia/Makassar (WITA)</option>
                     <option value="Asia/Jayapura">Asia/Jayapura (WIT)</option>
                   </select>
-                </div>
+                </div> 
                 
-                <div class="form-group">
-                  <h3>Email Notifications</h3>
-                  <div class="checkbox-group">
-                    <div class="checkbox-item">
-                      <input type="checkbox" id="email-orders" name="email-orders" checked>
-                      <label for="email-orders">Order updates and delivery notifications</label>
-                    </div>
-                    <div class="checkbox-item">
-                      <input type="checkbox" id="email-promotions" name="email-promotions" checked>
-                      <label for="email-promotions">Promotions and special offers</label>
-                    </div>
-                    <div class="checkbox-item">
-                      <input type="checkbox" id="email-newsletter" name="email-newsletter">
-                      <label for="email-newsletter">Weekly newsletter</label>
-                    </div>
-                  </div>
-                </div>
-                
-                <div class="form-group">
-                  <h3>SMS Notifications</h3>
-                  <div class="checkbox-group">
-                    <div class="checkbox-item">
-                      <input type="checkbox" id="sms-delivery" name="sms-delivery" checked>
-                      <label for="sms-delivery">Delivery notifications</label>
-                    </div>
-                    <div class="checkbox-item">
-                      <input type="checkbox" id="sms-reminders" name="sms-reminders">
-                      <label for="sms-reminders">Payment reminders</label>
-                    </div>
-                  </div>
-                </div>
                 
                 <div class="form-actions">
                   <button type="submit" class="btn-primary">Save Preferences</button>
                 </div>
               </form>
             </div>
-          </div>
-
-           
+          </div>  
            
         </div>
       </div>
