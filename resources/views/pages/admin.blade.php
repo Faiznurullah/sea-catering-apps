@@ -19,12 +19,13 @@
               <p>{{ Auth::user()->email }}</p>
             </div>
           </div>
-          
-          <ul class="sidebar-menu">
+            <ul class="sidebar-menu">
             <li class="active"><a href="#dashboard">Dashboard</a></li>
             <li><a href="#subscriptions">Subscriptions</a></li>
             <li><a href="#plan-distribution">Plan Distribution</a></li>  
-            <li><a href="#customers">Customers</a></li>  
+            <li><a href="#customers">Customers</a></li>
+            <li><a href="#experience-users">Experience Users</a></li>
+            <li><a href="#contacts">Contacts</a></li>
           </ul>
         </div>
         
@@ -341,6 +342,172 @@
                 <p>No customers have registered yet.</p>
               </div>
               @endif
+            </div>          </div>
+
+          <!-- Experience Users Table -->
+          <div class="admin-card" id="experience-users">
+            <div class="card-header">
+              <h2>Experience Users</h2>
+              <div class="card-header-actions">
+                <span class="badge">{{ $experienceUsers->count() }} Total Reviews</span>
+              </div>
+            </div>
+            <div class="card-content">
+              @if($experienceUsers->count() > 0)
+              <div class="table-responsive">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>User</th>
+                      <th>Name</th>
+                      <th>Review</th>
+                      <th>Rating</th>
+                      <th>Date Created</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @foreach($experienceUsers as $experience)
+                    <tr>
+                      <td>#{{ $experience->id }}</td>
+                      <td>
+                        <div class="customer-info">
+                          @if($experience->user)
+                            <strong>{{ $experience->user->name }}</strong>
+                            <small>{{ $experience->user->email }}</small>
+                          @else
+                            <span class="text-muted">User not found</span>
+                          @endif
+                        </div>
+                      </td>
+                      <td>
+                        <strong>{{ $experience->name }}</strong>
+                      </td>
+                      <td>
+                        <div class="review-text">
+                          {{ Str::limit($experience->review, 100) }}
+                          @if(strlen($experience->review) > 100)
+                            <button class="btn-link" onclick="showFullReview('{{ addslashes($experience->review) }}')">Read more</button>
+                          @endif
+                        </div>
+                      </td>
+                      <td>
+                        <div class="rating-display">
+                          @for($i = 1; $i <= 5; $i++)
+                            <span class="star {{ $i <= $experience->star ? 'filled' : '' }}">⭐</span>
+                          @endfor
+                          <span class="rating-value">({{ $experience->star }}/5)</span>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="date-info">
+                          <div>{{ $experience->created_at->format('d M Y') }}</div>
+                          <small class="text-muted">{{ $experience->created_at->diffForHumans() }}</small>
+                        </div>
+                      </td>
+                    </tr>
+                    @endforeach
+                  </tbody>
+                </table>
+              </div>
+              @else
+              <div class="empty-state">
+                <div class="empty-icon">⭐</div>
+                <h3>No Experience Reviews Yet</h3>
+                <p>No user experiences have been submitted yet.</p>
+              </div>
+              @endif
+            </div>
+          </div>
+
+          <!-- Contacts Table -->
+          <div class="admin-card" id="contacts">
+            <div class="card-header">
+              <h2>Contact Messages</h2>
+              <div class="card-header-actions">
+                <span class="badge">{{ $contacts->whereNull('read_at')->count() }} Unread</span>
+                <span class="badge">{{ $contacts->count() }} Total</span>
+              </div>
+            </div>
+            <div class="card-content">
+              @if($contacts->count() > 0)
+              <div class="table-responsive">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Name</th>
+                      <th>Contact Info</th>
+                      <th>Subject</th>
+                      <th>Message</th>
+                      <th>Status</th>
+                      <th>Date</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>                    @foreach($contacts as $contact)
+                    <tr class="{{ $contact->read_at ? 'read' : 'unread' }}" data-contact-id="{{ $contact->id }}">
+                      <td>#{{ $contact->id }}</td>
+                      <td>
+                        <strong>{{ $contact->name }}</strong>
+                      </td>
+                      <td>
+                        <div class="contact-details">
+                          <div>📧 {{ $contact->email }}</div>
+                          @if($contact->phone)
+                            <div>📞 {{ $contact->phone }}</div>
+                          @endif
+                        </div>
+                      </td>
+                      <td>
+                        <strong>{{ $contact->subject }}</strong>
+                      </td>
+                      <td>
+                        <div class="message-preview">
+                          {{ Str::limit($contact->message, 100) }}
+                          @if(strlen($contact->message) > 100)
+                            <button class="btn-link" onclick="showFullMessage('{{ addslashes($contact->message) }}', '{{ $contact->subject }}')">Read more</button>
+                          @endif
+                        </div>
+                      </td>
+                      <td>
+                        @if($contact->read_at)
+                          <span class="status read">✓ Read</span>
+                          <br><small class="text-muted">{{ $contact->read_at->format('d M Y H:i') }}</small>
+                        @else
+                          <span class="status unread">● Unread</span>
+                        @endif
+                      </td>
+                      <td>
+                        <div class="date-info">
+                          <div>{{ $contact->created_at->format('d M Y') }}</div>
+                          <small class="text-muted">{{ $contact->created_at->diffForHumans() }}</small>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="table-actions">
+                          @if(!$contact->read_at)
+                            <button class="action-btn mark-read-btn" 
+                                    onclick="markAsRead({{ $contact->id }})" 
+                                    title="Mark as Read">✓</button>
+                          @endif
+                          <button class="action-btn view-btn" 
+                                  onclick="showFullMessage('{{ addslashes($contact->message) }}', '{{ $contact->subject }}')" 
+                                  title="View Full Message">👁️</button>
+                        </div>
+                      </td>
+                    </tr>
+                    @endforeach
+                  </tbody>
+                </table>
+              </div>
+              @else
+              <div class="empty-state">
+                <div class="empty-icon">📮</div>
+                <h3>No Contact Messages</h3>
+                <p>No contact messages have been received yet.</p>
+              </div>
+              @endif
             </div>
           </div>
 
@@ -425,7 +592,6 @@
       </form>
     </div>
   </div>
-
   <!-- Allergies Modal -->
   <div class="modal" id="allergies-modal" style="display: none;">
     <div class="modal-content">
@@ -437,6 +603,34 @@
       </div>
       <div class="modal-actions">
         <button type="button" class="btn-primary" onclick="closeModal('allergies-modal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Full Review Modal -->
+  <div class="modal" id="full-review-modal" style="display: none;">
+    <div class="modal-content">
+      <span class="close-modal">&times;</span>
+      <h2>Full Review</h2>
+      <div class="review-content">
+        <div id="full-review-text"></div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-primary" onclick="closeModal('full-review-modal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Full Message Modal -->
+  <div class="modal" id="full-message-modal" style="display: none;">
+    <div class="modal-content">
+      <span class="close-modal">&times;</span>
+      <h2 id="message-subject">Contact Message</h2>
+      <div class="message-content">
+        <div id="full-message-text"></div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-primary" onclick="closeModal('full-message-modal')">Close</button>
       </div>
     </div>
   </div>

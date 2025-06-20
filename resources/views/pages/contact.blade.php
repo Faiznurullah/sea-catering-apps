@@ -59,41 +59,68 @@
               <a href="#" class="social-icon">YT</a>
             </div>
           </div>
-        </div>
-        
-        <div class="contact-form-container">
+        </div>        <div class="contact-form-container">
           <h2>Send Us a Message</h2>
-          <form id="contact-form" class="contact-form">
+          
+          @if(session('success'))
+            <div class="alert alert-success">
+              {{ session('success') }}
+            </div>
+          @endif
+          
+          @if(session('error'))
+            <div class="alert alert-danger">
+              {{ session('error') }}
+            </div>
+          @endif
+          
+          <form id="contact-form" class="contact-form" method="POST" action="{{ route('contact.store') }}">
+            @csrf
             <div class="form-group">
               <label for="name">Your Name</label>
-              <input type="text" id="name" name="name" required>
+              <input type="text" id="name" name="name" value="{{ old('name') }}" required>
+              @error('name')
+                <div class="error-message">{{ $message }}</div>
+              @enderror
             </div>
             
             <div class="form-group">
               <label for="email">Email Address</label>
-              <input type="email" id="email" name="email" required>
+              <input type="email" id="email" name="email" value="{{ old('email') }}" required>
+              @error('email')
+                <div class="error-message">{{ $message }}</div>
+              @enderror
             </div>
             
             <div class="form-group">
               <label for="phone">Phone Number</label>
-              <input type="tel" id="phone" name="phone">
+              <input type="tel" id="phone" name="phone" value="{{ old('phone') }}">
+              @error('phone')
+                <div class="error-message">{{ $message }}</div>
+              @enderror
             </div>
             
             <div class="form-group">
               <label for="subject">Subject</label>
               <select id="subject" name="subject" required>
                 <option value="">Select a subject</option>
-                <option value="subscription">Subscription Inquiry</option>
-                <option value="delivery">Delivery Question</option>
-                <option value="menu">Menu Information</option>
-                <option value="feedback">Feedback</option>
-                <option value="other">Other</option>
+                <option value="subscription" {{ old('subject') == 'subscription' ? 'selected' : '' }}>Subscription Inquiry</option>
+                <option value="delivery" {{ old('subject') == 'delivery' ? 'selected' : '' }}>Delivery Question</option>
+                <option value="menu" {{ old('subject') == 'menu' ? 'selected' : '' }}>Menu Information</option>
+                <option value="feedback" {{ old('subject') == 'feedback' ? 'selected' : '' }}>Feedback</option>
+                <option value="other" {{ old('subject') == 'other' ? 'selected' : '' }}>Other</option>
               </select>
+              @error('subject')
+                <div class="error-message">{{ $message }}</div>
+              @enderror
             </div>
             
             <div class="form-group">
               <label for="message">Your Message</label>
-              <textarea id="message" name="message" rows="5" required></textarea>
+              <textarea id="message" name="message" rows="5" required>{{ old('message') }}</textarea>
+              @error('message')
+                <div class="error-message">{{ $message }}</div>
+              @enderror
             </div>
             
             <button type="submit" class="btn-primary">Send Message</button>
@@ -101,21 +128,7 @@
         </div>
       </div>
     </div>
-  </section>
-
-  <!-- Map Section -->
-  <section class="map-section">
-    <div class="container">
-      <h2>Find Us</h2>
-      <div class="map-container">
-        <!-- Placeholder for map -->
-        <div class="map-placeholder">
-          <p>Map Placeholder</p>
-          <p>In a real application, this would be an interactive map showing our location</p>
-        </div>
-      </div>
-    </div>
-  </section>
+  </section> 
 
 @endsection
 @section('javascript')

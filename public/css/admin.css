@@ -949,3 +949,135 @@
     gap: 20px;
   }
 }
+
+/* Experience Users and Contacts Styles */
+.review-text {
+  max-width: 300px;
+  line-height: 1.4;
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  color: var(--primary-color);
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 2px 0;
+  font-size: 0.9em;
+}
+
+.btn-link:hover {
+  color: var(--secondary-color);
+}
+
+.rating-display {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.star {
+  font-size: 16px;
+  color: #ddd;
+}
+
+.star.filled {
+  color: #ffd700;
+}
+
+.rating-value {
+  font-size: 0.9em;
+  color: var(--text-light);
+  margin-left: 5px;
+}
+
+.contact-details {
+  line-height: 1.4;
+}
+
+.contact-details div {
+  margin-bottom: 3px;
+}
+
+.message-preview {
+  max-width: 300px;
+  line-height: 1.4;
+}
+
+.status.read {
+  color: var(--success-color);
+  font-weight: 500;
+}
+
+.status.unread {
+  color: var(--warning-color);
+  font-weight: 500;
+}
+
+tr.unread {
+  background-color: #fff9e6;
+}
+
+tr.unread:hover {
+  background-color: #fff3cd;
+}
+
+tr.read {
+  background-color: var(--white);
+}
+
+.mark-read-btn {
+  background-color: var(--success-color);
+  color: var(--white);
+}
+
+.mark-read-btn:hover {
+  background-color: #218838;
+}
+
+.review-content, .message-content {
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  margin: 15px 0;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+/* Badge styling for card headers */
+.card-header-actions .badge {
+  background-color: var(--primary-color);
+  color: var(--white);
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.8em;
+  margin-left: 10px;
+}
+
+.card-header-actions .badge:first-child {
+  margin-left: 0;
+}
+
+/* Empty state improvements */
+.empty-icon {
+  font-size: 3em;
+  margin-bottom: 15px;
+  opacity: 0.6;
+}
+
+/* Responsive improvements for new tables */
+@media (max-width: 768px) {
+  .review-text, .message-preview {
+    max-width: 200px;
+  }
+  
+  .contact-details {
+    font-size: 0.9em;
+  }
+  
+  .rating-display {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+}

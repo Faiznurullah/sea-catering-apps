@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RouteController;
 use App\Http\Controllers\ExperienceUserController;
 use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\ContactController;
 use App\Models\User;
 
 /*
@@ -33,7 +34,8 @@ Route::get('/language/{locale}', function($locale) {
 Route::get('/menu',  [RouteController::class, 'menu'])->name('menu');
 Route::get('/subscription',  [RouteController::class, 'subscription'])->name('subscription');
 Route::post('/subscription',  [RouteController::class, 'storeSubscription'])->name('subscription.store');
-Route::get('/contact',  [RouteController::class, 'contact'])->name('contact');
+Route::get('/contact',  [ContactController::class, 'index'])->name('contact');
+Route::post('/contact',  [ContactController::class, 'store'])->name('contact.store');
 
 // Register Post route
 Route::post('/register', [RegisterController::class, 'register'])->name('register.store.custom');
@@ -71,4 +73,6 @@ Route::group(['middleware' => ['verified', 'CheckRole:user']], function () {
 Route::group(['middleware' => ['verified', 'CheckRole:admin']], function () {
 
     Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'admin'])->name('admin');
+    Route::get('/admin/contacts', [ContactController::class, 'getAllContacts'])->name('admin.contacts');
+    Route::patch('/admin/contacts/{id}/mark-read', [ContactController::class, 'markAsRead'])->name('contact.mark-read');
 });

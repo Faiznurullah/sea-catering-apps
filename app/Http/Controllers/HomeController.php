@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Subscription;
 use App\Models\User;
+use App\Models\ExperienceUser;
+use App\Models\Contact;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -159,6 +161,15 @@ class HomeController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('pages.admin', compact('subscriptions', 'customers'));
+        // Ambil data experience_users
+        $experienceUsers = ExperienceUser::with('user')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Ambil data contacts
+        $contacts = Contact::orderBy('created_at', 'desc')
+            ->get();
+
+        return view('pages.admin', compact('subscriptions', 'customers', 'experienceUsers', 'contacts'));
     }
 }

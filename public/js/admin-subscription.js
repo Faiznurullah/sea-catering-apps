@@ -441,4 +441,86 @@ document.addEventListener("DOMContentLoaded", () => {
       document.body.style.overflow = 'auto';
     }
   });
+
+  // Functions for Experience Users and Contacts
+
+  // Show full review
+  window.showFullReview = function(reviewText) {
+    const modal = document.getElementById('full-review-modal');
+    const reviewTextElement = document.getElementById('full-review-text');
+    
+    reviewTextElement.textContent = reviewText;
+    modal.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+  }
+
+  // Show full message
+  window.showFullMessage = function(messageText, subject) {
+    const modal = document.getElementById('full-message-modal');
+    const messageTextElement = document.getElementById('full-message-text');
+    const subjectElement = document.getElementById('message-subject');
+    
+    messageTextElement.textContent = messageText;
+    subjectElement.textContent = subject || 'Contact Message';
+    modal.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+  }
+
+  // Mark contact as read
+  window.markAsRead = function(contactId) {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    
+    fetch(`/admin/contacts/${contactId}/mark-read`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': csrfToken,
+        'Accept': 'application/json'
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        // Update the UI to show as read
+        const row = document.querySelector(`tr[data-contact-id="${contactId}"]`);
+        if (row) {
+          row.classList.remove('unread');
+          row.classList.add('read');
+          
+          // Update status cell
+          const statusCell = row.cells[5]; // Assuming status is in 6th column (index 5)
+          statusCell.innerHTML = `
+            <span class="status read">✓ Read</span>
+            <br><small class="text-muted">Just now</small>
+          `;
+          
+          // Remove mark as read button
+          const markReadBtn = row.querySelector('.mark-read-btn');
+          if (markReadBtn) {
+            markReadBtn.remove();
+          }
+        }
+        
+        // Update unread count
+        updateUnreadCount();
+        
+        showNotification('Contact marked as read', 'success');
+      } else {
+        showNotification('Error marking contact as read', 'error');
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      showNotification('Error marking contact as read', 'error');
+    });
+  }
+
+  // Update unread count in badge
+  function updateUnreadCount() {
+    const unreadRows = document.querySelectorAll('#contacts tbody tr.unread');
+    const unreadBadge = document.querySelector('#contacts .card-header-actions .badge');
+    if (unreadBadge) {
+      unreadBadge.textContent = `${unreadRows.length} Unread`;
+    }
+  }
 });

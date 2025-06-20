@@ -277,38 +277,7 @@
             </div>
         </div>
     </div>
-
-    <!-- Testimonials Section -->
-    <section class="testimonials">
-        <div class="container">
-            <h2>Customer Reviews</h2>
-            <div class="testimonial-slider">
-                <div class="testimonial-card active">
-                    <div class="rating">★★★★★</div>
-                    <p class="testimonial-text">"The Diet Plan has helped me lose 5kg in just two months! The meals are
-                        delicious and I never feel like I'm on a diet."</p>
-                    <p class="customer-name">- Anita S.</p>
-                </div>
-                <div class="testimonial-card">
-                    <div class="rating">★★★★★</div>
-                    <p class="testimonial-text">"As an athlete, the Protein Plan gives me exactly what I need to recover
-                        after training. Great flavors and perfect portions."</p>
-                    <p class="customer-name">- Budi W.</p>
-                </div>
-                <div class="testimonial-card">
-                    <div class="rating">★★★★☆</div>
-                    <p class="testimonial-text">"The Royal Plan is like having a personal chef! The meals are exquisite and
-                        make every dinner feel special."</p>
-                    <p class="customer-name">- Diana P.</p>
-                </div>
-            </div>
-            <div class="testimonial-dots">
-                <span class="dot active"></span>
-                <span class="dot"></span>
-                <span class="dot"></span>
-            </div>
-        </div>
-    </section>
+ 
 
     <!-- Add Testimonial Section -->
     <section class="add-testimonial">
