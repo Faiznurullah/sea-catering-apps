@@ -30,22 +30,22 @@ Route::post('/register', [RegisterController::class, 'register'])->name('registe
 
 Route::resource('experience', ExperienceUserController::class);
 
-
-// Home subscription management routes
-Route::get('/home/subscriptions', [SubscriptionController::class, 'manage'])->name('subscription.manage');
-Route::patch('/subscription/{id}/status', [SubscriptionController::class, 'updateStatus'])->name('subscription.updateStatus');
-Route::post('/subscription/{id}/pause', [SubscriptionController::class, 'pauseSubscription'])->name('subscription.pause');
-Route::post('/subscription/{id}/resume', [SubscriptionController::class, 'resumeSubscription'])->name('subscription.resume');
-
-
 Auth::routes(['verify' => true]);
 
 Route::group(['middleware' => ['verified']], function () { 
     Route::get('/profile', [App\Http\Controllers\HomeController::class, 'profile'])->name('profile');
+    
+    // Home subscription management routes - available for all verified users
+    Route::get('/home/subscriptions', [SubscriptionController::class, 'manage'])->name('subscription.manage');
+    Route::patch('/subscription/{id}/status', [SubscriptionController::class, 'updateStatus'])->name('subscription.updateStatus');
+    Route::post('/subscription/{id}/pause', [SubscriptionController::class, 'pauseSubscription'])->name('subscription.pause');
+    Route::post('/subscription/{id}/pause-per-day', [SubscriptionController::class, 'pausePerDay'])->name('subscription.pausePerDay');
+    Route::get('/subscription/{id}/paused-days', [SubscriptionController::class, 'getPausedDays'])->name('subscription.getPausedDays');
+    Route::post('/subscription/{id}/resume', [SubscriptionController::class, 'resumeSubscription'])->name('subscription.resume');
+    Route::post('/subscription/{id}/calculate-pause-preview', [SubscriptionController::class, 'calculatePausePreview'])->name('subscription.calculatePausePreview');
 });
 
 Route::group(['middleware' => ['verified', 'CheckRole:user']], function () {
-
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 });
 

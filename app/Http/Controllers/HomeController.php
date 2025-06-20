@@ -25,7 +25,7 @@ class HomeController extends Controller
     public function index()
     {
         // Ambil subscription data untuk ditampilkan di home
-        $subscriptions = Subscription::with(['mealPlan', 'subscriptionMeals', 'deliveryDays'])
+        $subscriptions = Subscription::with(['mealPlan', 'subscriptionMeals', 'deliveryDays', 'pausedDays'])
             ->orderBy('created_at', 'desc')
             ->take(5) // Ambil 5 subscription terbaru
             ->get();
@@ -41,7 +41,7 @@ class HomeController extends Controller
     public function admin()
     {
         // Untuk admin, tampilkan semua subscription
-        $subscriptions = Subscription::with(['mealPlan', 'subscriptionMeals', 'deliveryDays'])
+        $subscriptions = Subscription::with(['mealPlan', 'subscriptionMeals', 'deliveryDays', 'pausedDays'])
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 

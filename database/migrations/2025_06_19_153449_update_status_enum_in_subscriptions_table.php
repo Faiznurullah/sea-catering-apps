@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 class UpdateStatusEnumInSubscriptionsTable extends Migration
 {
@@ -11,27 +12,15 @@ class UpdateStatusEnumInSubscriptionsTable extends Migration
      *
      * @return void
      */
-    public function up()
+     public function up()
     {
-        Schema::table('subscriptions', function (Blueprint $table) {
-            // Change status column to allow 'rejected' value
-            $table->enum('status', ['pending', 'active', 'paused', 'cancelled', 'rejected'])
-                  ->default('pending')
-                  ->change();
-        });
+        DB::statement("ALTER TABLE subscriptions MODIFY status ENUM('pending', 'active', 'paused', 'cancelled', 'rejected') DEFAULT 'pending'");
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
-        Schema::table('subscriptions', function (Blueprint $table) {
-            $table->enum('status', ['pending', 'active', 'paused', 'cancelled'])
-                  ->default('pending')
-                  ->change();
-        });
+        // Balik ke enum sebelumnya (jika perlu rollback)
+        DB::statement("ALTER TABLE subscriptions MODIFY status ENUM('pending', 'active', 'paused', 'cancelled') DEFAULT 'pending'");
     }
+    
 }

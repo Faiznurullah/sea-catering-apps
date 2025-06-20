@@ -59,6 +59,12 @@ class Subscription extends Model
         return $this->hasMany(SubscriptionDeliveryDay::class);
     }
 
+    // Relationship dengan SubscriptionPausedDay
+    public function pausedDays()
+    {
+        return $this->hasMany(SubscriptionPausedDay::class);
+    }
+
     // Accessor untuk mendapatkan meal types dalam array
     public function getMealTypesAttribute()
     {
@@ -95,23 +101,16 @@ class Subscription extends Model
         $pauseStart = \Carbon\Carbon::parse($startDate);
         $pauseEnd = \Carbon\Carbon::parse($endDate);
         
-        // Hitung jumlah hari yang di-pause
-        $pausedDays = $pauseStart->diffInDays($pauseEnd) + 1;
-        
-        // Hitung total hari pengiriman per bulan berdasarkan delivery days
-        $deliveryDaysPerWeek = $this->deliveryDays->count();
-        $deliveryDaysPerMonth = $deliveryDaysPerWeek * 4.3; // 4.3 minggu per bulan
-        
-        // Hitung refund amount berdasarkan hari yang di-pause
-        $dailyRate = $this->total_price / 30; // Asumsi 30 hari per bulan
-        $refundAmount = $dailyRate * $pausedDays;
+        // Calculate pause duration and refund using new accurate methods
+        $pausedDays = $this->getPauseDuration($startDate, $endDate);
+        $refundAmount = $this->calculatePauseRefund($startDate, $endDate);
         
         $this->update([
             'status' => 'paused',
             'pause_start_date' => $pauseStart,
             'pause_end_date' => $pauseEnd,
-            'paused_days_total' => $this->paused_days_total + $pausedDays,
-            'refund_amount' => $this->refund_amount + $refundAmount
+            'paused_days_total' => ($this->paused_days_total ?? 0) + $pausedDays,
+            'refund_amount' => ($this->refund_amount ?? 0) + $refundAmount
         ]);
         
         return $refundAmount;
@@ -127,34 +126,96 @@ class Subscription extends Model
         ]);
     }
 
-    // Method untuk mengecek apakah sedang dalam masa pause
+    /**
+     * Calculate daily rate based on subscription details
+     */
+    public function getDailyRate()
+    {
+        // Get number of delivery days per week
+        $deliveryDaysCount = $this->deliveryDays->count();
+        
+        // Get number of meals per day
+        $mealTypesCount = $this->subscriptionMeals->count();
+        
+        // Calculate daily meals delivered
+        $dailyMealsDelivered = $deliveryDaysCount * $mealTypesCount;
+        
+        // Calculate weekly rate
+        $weeklyRate = $dailyMealsDelivered * $this->mealPlan->price_per_meal;
+        
+        // Convert to daily rate (7 days per week)
+        return $weeklyRate / 7;
+    }
+
+    /**
+     * Calculate refund for specific pause duration
+     */
+    public function calculatePauseRefund($startDate, $endDate)
+    {
+        $start = Carbon::parse($startDate);
+        $end = Carbon::parse($endDate);
+        
+        if ($end <= $start) {
+            return 0;
+        }
+        
+        $pauseDays = $start->diffInDays($end) + 1;
+        $dailyRate = $this->getDailyRate();
+        
+        return $pauseDays * $dailyRate;
+    }
+
+    /**
+     * Get pause duration in days
+     */
+    public function getPauseDuration($startDate, $endDate)
+    {
+        $start = Carbon::parse($startDate);
+        $end = Carbon::parse($endDate);
+        
+        return $start->diffInDays($end) + 1;
+    }
+
+    /**
+     * Check if subscription is currently in pause period
+     */
     public function isCurrentlyPaused()
     {
         if ($this->status !== 'paused' || !$this->pause_start_date || !$this->pause_end_date) {
             return false;
         }
         
-        $today = \Carbon\Carbon::now();
-        return $today->between($this->pause_start_date, $this->pause_end_date);
+        $now = Carbon::now()->startOfDay();
+        $start = Carbon::parse($this->pause_start_date)->startOfDay();
+        $end = Carbon::parse($this->pause_end_date)->endOfDay();
+        
+        return $now->between($start, $end);
     }
 
-    // Method untuk menghitung remaining pause days
+    /**
+     * Get remaining pause days
+     */
     public function getRemainingPauseDays()
     {
         if (!$this->isCurrentlyPaused()) {
             return 0;
         }
         
-        $today = \Carbon\Carbon::now();
-        return $today->diffInDays($this->pause_end_date);
+        $now = Carbon::now()->startOfDay();
+        $end = Carbon::parse($this->pause_end_date)->endOfDay();
+        
+        return $now->diffInDays($end) + 1;
     }
 
-    // Method untuk menghitung adjusted monthly payment
+    /**
+     * Calculate adjusted monthly payment after pause
+     */
     public function getAdjustedMonthlyPayment()
     {
-        $basePayment = $this->total_price;
-        $pauseRefund = $this->refund_amount;
+        if ($this->refund_amount <= 0) {
+            return $this->total_price;
+        }
         
-        return $basePayment - $pauseRefund;
+        return $this->total_price - $this->refund_amount;
     }
 }
