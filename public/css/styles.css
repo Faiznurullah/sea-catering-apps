@@ -161,6 +161,18 @@ section {
   transition: var(--transition);
 }
 
+.menu-toggle.active span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.menu-toggle.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-toggle.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(7px, -6px);
+}
+
 /* Hero Section */
 .hero {
   background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("/placeholder.svg?height=800&width=1200");
@@ -509,6 +521,28 @@ footer {
     width: 100%;
   }
 
+  /* User Menu Mobile Styles */
+  .user-menu .user-dropdown {
+    position: static;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    box-shadow: none;
+    background-color: var(--light-bg);
+    margin-top: 10px;
+    border-radius: 8px;
+    display: none;
+  }
+
+  .user-menu.active .user-dropdown {
+    display: block;
+  }
+
+  .user-dropdown li a {
+    padding: 10px 15px;
+    border-bottom: 1px solid var(--border-color);
+  }
+
   .hero h1 {
     font-size: 2.5rem;
   }
@@ -592,4 +626,61 @@ footer {
   padding: 8px 20px;
   border-radius: 30px;
   transition: var(--transition);
+}
+
+/* User Menu Styles */
+.user-menu {
+  position: relative;
+}
+
+.user-menu-trigger {
+  cursor: pointer;
+  font-weight: 500;
+  transition: var(--transition);
+}
+
+.user-menu-trigger:hover {
+  color: var(--primary-color);
+}
+
+.user-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: var(--white);
+  box-shadow: var(--shadow);
+  border-radius: 8px;
+  min-width: 180px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: var(--transition);
+  z-index: 1000;
+}
+
+.user-menu:hover .user-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.user-dropdown li {
+  margin: 0;
+}
+
+.user-dropdown li a {
+  display: block;
+  padding: 12px 20px;
+  color: var(--text-color);
+  transition: var(--transition);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.user-dropdown li:last-child a {
+  border-bottom: none;
+}
+
+.user-dropdown li a:hover {
+  background-color: var(--light-bg);
+  color: var(--primary-color);
 }

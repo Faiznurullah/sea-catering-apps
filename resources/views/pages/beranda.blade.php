@@ -13,7 +13,7 @@
         <h1>SEA Catering</h1>
         <p class="slogan">Healthy Meals, Anytime, Anywhere</p>
         <p class="hero-text">Customizable healthy meal plans delivered across Indonesia</p>
-        <a href="subscription.html" class="btn-primary">Start Your Plan</a>
+        <a href="/subscription" class="btn-primary">Start Your Plan</a>
       </div>
     </div>
   </section>
@@ -124,7 +124,7 @@
     <div class="container">
       <h2>Ready to Start Your Healthy Meal Journey?</h2>
       <p>Join thousands of satisfied customers across Indonesia and experience the convenience of healthy, delicious meals delivered to your door.</p>
-      <a href="subscription.html" class="btn-primary">Subscribe Now</a>
+      <a href="/subscription" class="btn-primary">Subscribe Now</a>
     </div>
   </section>
 

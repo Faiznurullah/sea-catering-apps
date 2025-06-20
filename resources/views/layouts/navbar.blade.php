@@ -48,11 +48,11 @@
                         </ul>
                     </li>
                 @endif
-                <li>@include('components.language-switcher')</li>
+              
             @else
                 {{-- User is not logged in - show login button --}}
                 <li><a href="{{ route('login') }}" class="btn-login">{{ __('profile.login') }}</a></li>
-                <li>@include('components.language-switcher')</li>
+                
             @endauth
         </ul>
     </div>

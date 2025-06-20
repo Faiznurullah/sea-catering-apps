@@ -763,6 +763,133 @@
   opacity: 1;
 }
 
+/* Customer Management Styles */
+.customer-count {
+  color: #6c757d;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.customer-row:hover {
+  background-color: #f8f9fa;
+}
+
+.customer-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.customer-avatar {
+  flex-shrink: 0;
+}
+
+.customer-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.customer-details strong {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.customer-details small {
+  color: #6c757d;
+  font-size: 12px;
+}
+
+.contact-info, .location-info, .date-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.contact-info div, .location-info div {
+  font-size: 13px;
+  color: #495057;
+}
+
+.text-muted {
+  color: #6c757d !important;
+  font-style: italic;
+}
+
+.subscription-count .badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.badge-success {
+  background-color: #28a745;
+  color: white;
+}
+
+.badge-secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.points-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  background-color: #007bff;
+  color: white;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.status-badge.verified {
+  background-color: #28a745;
+  color: white;
+}
+
+.status-badge.unverified {
+  background-color: #ffc107;
+  color: #212529;
+}
+
+.date-info {
+  font-size: 13px;
+}
+
+.date-info small {
+  font-size: 11px;
+}
+
+/* Empty state for customers */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #6c757d;
+}
+
+.empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.empty-state h3 {
+  color: #495057;
+  margin-bottom: 8px;
+}
+
+.empty-state p {
+  margin-bottom: 0;
+}
+
 /* Responsive Modal */
 @media (max-width: 768px) {
   .modal-content {

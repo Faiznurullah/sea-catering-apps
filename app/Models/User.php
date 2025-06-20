@@ -58,5 +58,13 @@ class User extends Authenticatable implements MustVerifyEmail, AuthenticatableCo
         'email_verified_at' => 'datetime',
     ];
 
+    /**
+     * Get the subscriptions for the user.
+     */
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class, 'name', 'name'); // Assuming subscription uses name field
+    }
+
     
 }

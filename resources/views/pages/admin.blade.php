@@ -2,7 +2,7 @@
 @section('title', 'CateringApp')
 @section('css')
 <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
-<link rel="stylesheet" href="{{ asset('css/admin.css') }}">
+<link rel="stylesheet" href="{{ asset('css/admin.css') }}"> 
 @endsection
 @section('content')
 
@@ -23,10 +23,8 @@
           <ul class="sidebar-menu">
             <li class="active"><a href="#dashboard">Dashboard</a></li>
             <li><a href="#subscriptions">Subscriptions</a></li>
-            <li><a href="#customers">Customers</a></li>
-            <li><a href="#deliveries">Deliveries</a></li>
-            <li><a href="#reports">Reports</a></li>
-            <li><a href="#settings">Settings</a></li>
+            <li><a href="#plan-distribution">Plan Distribution</a></li>  
+            <li><a href="#customers">Customers</a></li>  
           </ul>
         </div>
         
@@ -81,38 +79,8 @@
                 <p class="stat-change positive">Currently active</p>
               </div>
             </div>
-          </div>
-          
-          <!-- Subscription Growth Chart -->
-          <div class="admin-card">
-            <div class="card-header">
-              <h2>Subscription Growth</h2>
-            </div>
-            <div class="card-content">
-              <div class="chart-container">
-                <div class="chart-placeholder">
-                  <div class="chart-bars">
-                    <div class="chart-bar" style="height: 30%;" data-tooltip="Jan: 850"></div>
-                    <div class="chart-bar" style="height: 40%;" data-tooltip="Feb: 920"></div>
-                    <div class="chart-bar" style="height: 45%;" data-tooltip="Mar: 950"></div>
-                    <div class="chart-bar" style="height: 55%;" data-tooltip="Apr: 1020"></div>
-                    <div class="chart-bar" style="height: 60%;" data-tooltip="May: 1080"></div>
-                    <div class="chart-bar" style="height: 70%;" data-tooltip="Jun: 1150"></div>
-                    <div class="chart-bar active" style="height: 80%;" data-tooltip="Jul: 1245"></div>
-                  </div>
-                  <div class="chart-labels">
-                    <span>Jan</span>
-                    <span>Feb</span>
-                    <span>Mar</span>
-                    <span>Apr</span>
-                    <span>May</span>
-                    <span>Jun</span>
-                    <span>Jul</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          </div> 
+
             <!-- Recent Subscriptions -->
           <div class="admin-card" id="subscriptions">
             <div class="card-header">
@@ -245,7 +213,7 @@
           </div>
           
           <!-- Plan Distribution -->
-          <div class="admin-card">
+          <div class="admin-card" id="plan-distribution">
             <div class="card-header">
               <h2>Plan Distribution</h2>
             </div>
@@ -272,9 +240,110 @@
                     </div>
                   </div>
                 </div>
+              </div>            </div>
+          </div>
+
+          <!-- Customers Section -->
+          <div class="admin-card" id="customers">
+            <div class="card-header">
+              <h2>Customer Management</h2>
+              <div class="card-header-actions">
+                <span class="customer-count">Total: {{ $customers->count() }} customers</span>
               </div>
             </div>
+            <div class="card-content">
+              @if($customers->count() > 0)
+              <div class="table-responsive">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Customer Info</th>
+                      <th>Contact</th>
+                      <th>Location</th> 
+                      <th>Points</th>
+                      <th>Registration Date</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @foreach($customers as $customer)
+                    <tr class="customer-row">
+                      <td>#{{ $customer->id }}</td>
+                      <td>
+                        <div class="customer-info">
+                          <div class="customer-avatar">
+                            @if($customer->foto)
+                              <img src="{{ asset('storage/' . $customer->foto) }}" alt="Avatar" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+                            @else
+                              <div style="width: 40px; height: 40px; border-radius: 50%; background: #007bff; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+                                {{ strtoupper(substr($customer->name, 0, 2)) }}
+                              </div>
+                            @endif
+                          </div>
+                          <div class="customer-details">
+                            <strong>{{ $customer->name }}</strong>
+                            <small>{{ $customer->email }}</small>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="contact-info">
+                          @if($customer->phone)
+                            <div>📞 {{ $customer->phone }}</div>
+                          @else
+                            <span class="text-muted">No phone</span>
+                          @endif
+                        </div>
+                      </td>
+                      <td>
+                        <div class="location-info">
+                          @if($customer->city)
+                            <div>🏙️ {{ $customer->city }}</div>
+                          @endif
+                          @if($customer->national)
+                            <div>🌍 {{ $customer->national }}</div>
+                          @endif
+                          @if(!$customer->city && !$customer->national)
+                            <span class="text-muted">Not provided</span>
+                          @endif
+                        </div>
+                      </td> 
+                      <td>
+                        <div class="points-info">
+                          <span class="points-badge">{{ number_format($customer->point ?? 0) }} pts</span>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="date-info">
+                          <div>{{ $customer->created_at->format('d M Y') }}</div>
+                          <small class="text-muted">{{ $customer->created_at->diffForHumans() }}</small>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="status-info">
+                          @if($customer->email_verified_at)
+                            <span class="status-badge verified">✓ Verified</span>
+                          @else
+                            <span class="status-badge unverified">⚠ Unverified</span>
+                          @endif
+                        </div>
+                      </td>
+                    </tr>
+                    @endforeach
+                  </tbody>
+                </table>
+              </div>
+              @else
+              <div class="empty-state">
+                <div class="empty-icon">👥</div>
+                <h3>No Customers Yet</h3>
+                <p>No customers have registered yet.</p>
+              </div>
+              @endif
+            </div>
           </div>
+
         </div>
       </div>
     </div>

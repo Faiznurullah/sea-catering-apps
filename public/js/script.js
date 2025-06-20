@@ -10,6 +10,28 @@ document.addEventListener("DOMContentLoaded", () => {
     })
   }
 
+  // User Menu Toggle for Mobile
+  const userMenuTrigger = document.querySelector(".user-menu-trigger")
+  const userMenu = document.querySelector(".user-menu")
+
+  if (userMenuTrigger && userMenu) {
+    userMenuTrigger.addEventListener("click", (e) => {
+      // Only handle click on mobile screens
+      if (window.innerWidth <= 768) {
+        e.preventDefault()
+        userMenu.classList.toggle("active")
+      }
+    })
+  }
+
+  // Close mobile menu when clicking outside
+  document.addEventListener("click", (e) => {
+    if (navMenu && !navMenu.contains(e.target) && !menuToggle.contains(e.target)) {
+      navMenu.classList.remove("active")
+      menuToggle.classList.remove("active")
+    }
+  })
+
   // Testimonial Slider functionality is now handled by Swiper.js
   // Legacy code removed to prevent conflicts
 

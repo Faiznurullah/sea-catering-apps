@@ -147,15 +147,18 @@ class HomeController extends Controller
                 'message' => 'Error changing password: ' . $e->getMessage()
             ], 500);
         }
-    }
-
-    public function admin()
+    }    public function admin()
     {
         // Untuk admin, tampilkan semua subscription
         $subscriptions = Subscription::with(['mealPlan', 'subscriptionMeals', 'deliveryDays', 'pausedDays'])
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
-        return view('pages.admin', compact('subscriptions'));
+        // Ambil semua customers (users dengan role 'user')
+        $customers = User::where('role', 'user')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('pages.admin', compact('subscriptions', 'customers'));
     }
 }

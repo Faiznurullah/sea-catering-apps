@@ -390,6 +390,44 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   };
 
+  // Sidebar navigation
+  const sidebarLinks = document.querySelectorAll('.sidebar-menu a');
+  const sections = document.querySelectorAll('.admin-card');
+
+  sidebarLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      
+      // Remove active class from all links
+      sidebarLinks.forEach(l => l.parentElement.classList.remove('active'));
+      
+      // Add active class to clicked link
+      link.parentElement.classList.add('active');
+      
+      // Get target section
+      const targetId = link.getAttribute('href').substring(1);
+      
+      if (targetId === 'dashboard') {
+        // Show stats grid for dashboard
+        const statsGrid = document.querySelector('.stats-grid');
+        const chartSection = document.querySelector('.admin-card');
+        if (statsGrid) statsGrid.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        // Show specific section
+        const targetSection = document.getElementById(targetId);
+        if (targetSection) {
+          targetSection.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    });
+  });
+
+  // Initial page load - set dashboard as active
+  const dashboardLink = document.querySelector('a[href="#dashboard"]');
+  if (dashboardLink) {
+    dashboardLink.parentElement.classList.add('active');
+  }
+
   // Close modals when clicking outside or on close button
   document.addEventListener('click', function(e) {
     if (e.target.classList.contains('modal')) {
