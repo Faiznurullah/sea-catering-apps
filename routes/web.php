@@ -42,6 +42,8 @@ Auth::routes(['verify' => true]);
 
 Route::group(['middleware' => ['verified']], function () {
     Route::get('/profile', [App\Http\Controllers\HomeController::class, 'profile'])->name('profile');
+    Route::post('/profile/update', [App\Http\Controllers\HomeController::class, 'updateProfile'])->name('profile.update');
+    Route::post('/profile/change-password', [App\Http\Controllers\HomeController::class, 'changePassword'])->name('profile.change-password');
 
     Route::patch('/subscriptions/{id}/approve', [App\Http\Controllers\SubscriptionController::class, 'approve'])->name('subscription.approve');
     Route::patch('/subscriptions/{id}/reject', [App\Http\Controllers\SubscriptionController::class, 'reject'])->name('subscription.reject');

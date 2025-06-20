@@ -23,8 +23,8 @@
           
           <ul class="sidebar-menu">
             <li class="active"><a href="#subscriptions">My Subscriptions</a></li>
-            <li><a href="#payment-history">Payment History</a></li>
-            <li><a href="#account-settings">Account Settings</a></li> 
+            {{-- <li><a href="#payment-history">Payment History</a></li>
+            <li><a href="#account-settings">Account Settings</a></li>  --}}
           </ul>
         </div>
         

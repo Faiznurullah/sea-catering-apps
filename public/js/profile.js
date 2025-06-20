@@ -1,351 +1,320 @@
-document.addEventListener("DOMContentLoaded", () => {
-  // User Dropdown Menu
-  const userMenuTrigger = document.querySelector(".user-menu-trigger")
-  const userDropdown = document.querySelector(".user-dropdown")
-
-  if (userMenuTrigger && userDropdown) {
-    userMenuTrigger.addEventListener("click", (e) => {
-      e.preventDefault()
-      userDropdown.classList.toggle("show")
-    })
-
-    // Close dropdown when clicking outside
-    document.addEventListener("click", (e) => {
-      if (!e.target.closest(".user-menu")) {
-        userDropdown.classList.remove("show")
-      }
-    })
-  }
-
-  // Logout Button
-  const logoutBtn = document.getElementById("logout-btn")
-  if (logoutBtn) {
-    logoutBtn.addEventListener("click", (e) => {
-      e.preventDefault()
-      alert("You have been logged out successfully.")
-      window.location.href = "index.html"
-    })
-  }
-
-  // Avatar Upload
-  const changeAvatarBtn = document.getElementById("change-avatar-btn")
-  const avatarUpload = document.getElementById("avatar-upload")
-  const profileAvatar = document.querySelector(".profile-avatar")
-
-  if (changeAvatarBtn && avatarUpload) {
-    changeAvatarBtn.addEventListener("click", () => {
-      avatarUpload.click()
-    })
-
-    avatarUpload.addEventListener("change", (e) => {
-      const file = e.target.files[0]
-      if (file) {
-        const reader = new FileReader()
-        reader.onload = (e) => {
-          // In a real application, you would upload the image to a server
-          // For now, we'll just show a preview
-          profileAvatar.style.backgroundImage = `url(${e.target.result})`
-          profileAvatar.style.backgroundSize = "cover"
-          profileAvatar.style.backgroundPosition = "center"
-          profileAvatar.textContent = ""
-          alert("Avatar updated successfully!")
-        }
-        reader.readAsDataURL(file)
-      }
-    })
-  }
-
-  // Edit Account Information
-  const editAccountBtn = document.getElementById("edit-account-btn")
-  const accountForm = document.getElementById("account-form")
-  const accountActions = document.getElementById("account-actions")
-  const cancelAccountBtn = document.getElementById("cancel-account-btn")
-
-  if (editAccountBtn && accountForm) {
-    editAccountBtn.addEventListener("click", () => {
-      // Enable form fields
-      const inputs = accountForm.querySelectorAll("input, textarea")
-      inputs.forEach((input) => {
-        if (input.id !== "email") {
-          // Keep email readonly
-          input.removeAttribute("readonly")
-          input.style.backgroundColor = "var(--white)"
-          input.style.color = "var(--text-color)"
-        }
-      })
-
-      // Show form actions
-      accountActions.style.display = "flex"
-      editAccountBtn.style.display = "none"
-    })
-
-    cancelAccountBtn.addEventListener("click", () => {
-      // Reset form and disable fields
-      accountForm.reset()
-      const inputs = accountForm.querySelectorAll("input, textarea")
-      inputs.forEach((input) => {
-        input.setAttribute("readonly", "true")
-        input.style.backgroundColor = "#f8f9fa"
-        input.style.color = "var(--light-text)"
-      })
-
-      // Hide form actions
-      accountActions.style.display = "none"
-      editAccountBtn.style.display = "inline-block"
-
-      // Reset to original values
-      document.getElementById("first-name").value = "John"
-      document.getElementById("last-name").value = "Doe"
-      document.getElementById("email").value = "john.doe@example.com"
-      document.getElementById("phone").value = "08123456789"
-      document.getElementById("address").value = "Jl. Sudirman No. 123, Jakarta Pusat, 10220"
-      document.getElementById("birth-date").value = "1990-01-15"
-    })
-
-    accountForm.addEventListener("submit", (e) => {
-      e.preventDefault()
-
-      // In a real application, this would send data to a server
-      alert("Account information updated successfully!")
-
-      // Disable form fields
-      const inputs = accountForm.querySelectorAll("input, textarea")
-      inputs.forEach((input) => {
-        input.setAttribute("readonly", "true")
-        input.style.backgroundColor = "#f8f9fa"
-        input.style.color = "var(--light-text)"
-      })
-
-      // Hide form actions
-      accountActions.style.display = "none"
-      editAccountBtn.style.display = "inline-block"
-
-      // Update profile header if name changed
-      const firstName = document.getElementById("first-name").value
-      const lastName = document.getElementById("last-name").value
-      const fullName = `${firstName} ${lastName}`
-      document.querySelector(".profile-info h1").textContent = fullName
-      document.querySelector(".user-menu-trigger").textContent = `${fullName} ▼`
-    })
-  }
-
-  // Preferences Form
-  const preferencesForm = document.getElementById("preferences-form")
-  if (preferencesForm) {
-    preferencesForm.addEventListener("submit", (e) => {
-      e.preventDefault()
-      alert("Preferences saved successfully!")
-    })
-  }
-
-  // Change Password Modal
-  const changePasswordBtn = document.getElementById("change-password-btn")
-  const changePasswordModal = document.getElementById("change-password-modal")
-  const changePasswordForm = document.getElementById("change-password-form")
-  const cancelPasswordChange = document.getElementById("cancel-password-change")
-
-  if (changePasswordBtn) {
-    changePasswordBtn.addEventListener("click", () => {
-      changePasswordModal.style.display = "block"
-      document.body.style.overflow = "hidden"
-    })
-  }
-
-  if (cancelPasswordChange) {
-    cancelPasswordChange.addEventListener("click", () => {
-      changePasswordModal.style.display = "none"
-      document.body.style.overflow = "auto"
-      changePasswordForm.reset()
-    })
-  }
-
-  if (changePasswordForm) {
-    changePasswordForm.addEventListener("submit", (e) => {
-      e.preventDefault()
-
-      const currentPassword = document.getElementById("current-password").value
-      const newPassword = document.getElementById("new-password").value
-      const confirmPassword = document.getElementById("confirm-new-password").value
-
-      // Basic validation
-      if (!currentPassword || !newPassword || !confirmPassword) {
-        alert("Please fill in all fields")
-        return
-      }
-
-      // Password validation
-      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
-      if (!passwordRegex.test(newPassword)) {
-        alert("Password must be at least 8 characters and include uppercase, lowercase, number, and special character")
-        return
-      }
-
-      // Confirm password
-      if (newPassword !== confirmPassword) {
-        alert("New passwords do not match")
-        return
-      }
-
-      // In a real application, this would send data to a server
-      alert("Password changed successfully!")
-      changePasswordModal.style.display = "none"
-      document.body.style.overflow = "auto"
-      changePasswordForm.reset()
-    })
-  }
-
-  // Toggle Password Visibility
-  const togglePasswordButtons = document.querySelectorAll(".toggle-password")
-  togglePasswordButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const passwordInput = button.previousElementSibling
-      if (passwordInput.type === "password") {
-        passwordInput.type = "text"
-        button.textContent = "🔒"
-      } else {
-        passwordInput.type = "password"
-        button.textContent = "👁️"
-      }
-    })
-  })
-
-  // Verification Modal
-  const verificationBadge = document.getElementById("verification-badge")
-  const verificationModal = document.getElementById("verification-modal")
-  const resendVerificationBtn = document.getElementById("resend-verification")
-  const closeVerificationBtn = document.getElementById("close-verification")
-
-  // Simulate unverified account for demo
-  if (Math.random() > 0.7) {
-    // 30% chance of unverified account
-    verificationBadge.textContent = "⚠️ Unverified Account"
-    verificationBadge.className = "status-badge unverified"
-    verificationBadge.style.cursor = "pointer"
-
-    verificationBadge.addEventListener("click", () => {
-      verificationModal.style.display = "block"
-      document.body.style.overflow = "hidden"
-    })
-  }
-
-  if (resendVerificationBtn) {
-    resendVerificationBtn.addEventListener("click", () => {
-      resendVerificationBtn.disabled = true
-      resendVerificationBtn.textContent = "Sending..."
-
-      setTimeout(() => {
-        alert("Verification email sent!")
-        resendVerificationBtn.disabled = false
-        resendVerificationBtn.textContent = "Resend Email"
-      }, 2000)
-    })
-  }
-
-  if (closeVerificationBtn) {
-    closeVerificationBtn.addEventListener("click", () => {
-      verificationModal.style.display = "none"
-      document.body.style.overflow = "auto"
-    })
-  }
-
-  // 2FA Enable Button
-  const enable2faBtn = document.getElementById("enable-2fa-btn")
-  if (enable2faBtn) {
-    enable2faBtn.addEventListener("click", () => {
-      alert("Two-Factor Authentication setup will be implemented in a future update.")
-    })
-  }
-
-  // Manage Sessions Button
-  const manageSessionsBtn = document.getElementById("manage-sessions-btn")
-  if (manageSessionsBtn) {
-    manageSessionsBtn.addEventListener("click", () => {
-      alert("Session management will be implemented in a future update.")
-    })
-  }
-
-  // Deactivate Account Button
-  const deactivateAccountBtn = document.getElementById("deactivate-account-btn")
-  if (deactivateAccountBtn) {
-    deactivateAccountBtn.addEventListener("click", () => {
-      if (confirm("Are you sure you want to deactivate your account? You can reactivate it anytime.")) {
-        alert("Account deactivated successfully. You can reactivate it by logging in again.")
-        window.location.href = "index.html"
-      }
-    })
-  }
-
-  // Delete Account Modal
-  const deleteAccountBtn = document.getElementById("delete-account-btn")
-  const deleteAccountModal = document.getElementById("delete-account-modal")
-  const deleteAccountForm = document.getElementById("delete-account-form")
-  const cancelDeleteBtn = document.getElementById("cancel-delete")
-
-  if (deleteAccountBtn) {
-    deleteAccountBtn.addEventListener("click", () => {
-      deleteAccountModal.style.display = "block"
-      document.body.style.overflow = "hidden"
-    })
-  }
-
-  if (cancelDeleteBtn) {
-    cancelDeleteBtn.addEventListener("click", () => {
-      deleteAccountModal.style.display = "none"
-      document.body.style.overflow = "auto"
-      deleteAccountForm.reset()
-    })
-  }
-
-  if (deleteAccountForm) {
-    deleteAccountForm.addEventListener("submit", (e) => {
-      e.preventDefault()
-
-      const confirmation = document.getElementById("delete-confirmation").value
-      const password = document.getElementById("delete-password").value
-
-      if (confirmation !== "DELETE") {
-        alert('Please type "DELETE" to confirm account deletion')
-        return
-      }
-
-      if (!password) {
-        alert("Please enter your password")
-        return
-      }
-
-      // In a real application, this would verify the password and delete the account
-      alert("Account deleted successfully. We're sorry to see you go!")
-      window.location.href = "index.html"
-    })
-  }
-
-  // Close modals when clicking the X button
-  const closeModalBtns = document.querySelectorAll(".close-modal")
-  closeModalBtns.forEach((btn) => {
-    btn.addEventListener("click", function () {
-      const modal = this.closest(".modal")
-      modal.style.display = "none"
-      document.body.style.overflow = "auto"
-
-      // Reset forms when closing modals
-      const form = modal.querySelector("form")
-      if (form) {
-        form.reset()
-      }
-    })
-  })
-
-  // Close modals when clicking outside the modal content
-  window.addEventListener("click", (e) => {
-    if (e.target.classList.contains("modal")) {
-      e.target.style.display = "none"
-      document.body.style.overflow = "auto"
-
-      // Reset forms when closing modals
-      const form = e.target.querySelector("form")
-      if (form) {
-        form.reset()
-      }
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Profile JS loaded');
+    
+    // CSRF token setup
+    const csrfToken = document.querySelector('meta[name="csrf-token"]');
+    if (!csrfToken) {
+        console.error('CSRF token not found');
+        return;
     }
-  })
-})
+    
+    // Elements
+    const editAccountBtn = document.getElementById('edit-account-btn');
+    const cancelAccountBtn = document.getElementById('cancel-account-btn');
+    const accountForm = document.getElementById('account-form');
+    const accountActions = document.getElementById('account-actions');
+    const fotoGroup = document.getElementById('foto-group');
+    const changePasswordBtn = document.getElementById('change-password-btn');
+    const changePasswordModal = document.getElementById('change-password-modal');
+    const changePasswordForm = document.getElementById('change-password-form');
+    const closeModals = document.querySelectorAll('.close-modal');
+    const cancelPasswordChange = document.getElementById('cancel-password-change');
+    const changeAvatarBtn = document.getElementById('change-avatar-btn');
+    const avatarUpload = document.getElementById('avatar-upload');
+
+    // Debug: Log found elements
+    console.log('Edit button found:', !!editAccountBtn);
+    console.log('Account form found:', !!accountForm);
+    
+    // Form fields
+    const formFields = ['name', 'email', 'phone', 'city', 'national'];
+
+    // Store original values for reset
+    let originalValues = {};
+    formFields.forEach(field => {
+        const input = document.getElementById(field);
+        if (input) {
+            originalValues[field] = input.value;
+        }
+    });
+
+    // Show success message
+    function showMessage(message, type = 'success') {
+        // Remove existing alerts
+        const existingAlerts = document.querySelectorAll('.alert');
+        existingAlerts.forEach(alert => alert.remove());
+
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${type}`;
+        alertDiv.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            background: ${type === 'success' ? '#d4edda' : '#f8d7da'};
+            color: ${type === 'success' ? '#155724' : '#721c24'};
+            border: 1px solid ${type === 'success' ? '#c3e6cb' : '#f5c6cb'};
+            border-radius: 5px;
+            z-index: 9999;
+            max-width: 300px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        `;
+        alertDiv.textContent = message;
+        document.body.appendChild(alertDiv);
+
+        // Auto remove after 5 seconds
+        setTimeout(() => {
+            alertDiv.remove();
+        }, 5000);
+    }
+
+    // Toggle edit mode for account form
+    if (editAccountBtn) {
+        editAccountBtn.addEventListener('click', function() {
+            console.log('Edit button clicked');
+            
+            formFields.forEach(field => {
+                const input = document.getElementById(field);
+                if (input) {
+                    input.removeAttribute('readonly');
+                    input.style.backgroundColor = '#fff';
+                    input.style.borderColor = '#ced4da';
+                    console.log(`Field ${field} enabled`);
+                }
+            });
+            
+            if (fotoGroup) {
+                fotoGroup.style.display = 'block';
+                console.log('Photo group shown');
+            }
+            if (accountActions) {
+                accountActions.style.display = 'flex';
+                console.log('Actions shown');
+            }
+            editAccountBtn.style.display = 'none';
+            
+            showMessage('Edit mode enabled. Make your changes and click Save.', 'success');
+        });
+    } else {
+        console.error('Edit account button not found');
+    }
+
+    // Cancel edit mode
+    if (cancelAccountBtn) {
+        cancelAccountBtn.addEventListener('click', function() {
+            console.log('Cancel button clicked');
+            
+            // Reset form to original values
+            formFields.forEach(field => {
+                const input = document.getElementById(field);
+                if (input) {
+                    input.value = originalValues[field] || '';
+                    input.setAttribute('readonly', true);
+                    input.style.backgroundColor = '#f8f9fa';
+                    input.style.borderColor = '#ced4da';
+                }
+            });
+            
+            if (fotoGroup) fotoGroup.style.display = 'none';
+            if (accountActions) accountActions.style.display = 'none';
+            if (editAccountBtn) editAccountBtn.style.display = 'inline-block';
+            
+            showMessage('Changes cancelled', 'success');
+        });
+    }
+
+    // Handle account form submission
+    if (accountForm) {
+        accountForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            console.log('Form submitted');
+            
+            const formData = new FormData(accountForm);
+            
+            // Show loading state
+            const submitBtn = accountForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Saving...';
+            submitBtn.disabled = true;
+
+            fetch('/profile/update', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken.getAttribute('content')
+                }
+            })
+            .then(response => {
+                console.log('Response status:', response.status);
+                return response.json();
+            })
+            .then(data => {
+                console.log('Response data:', data);
+                if (data.success) {
+                    showMessage(data.message, 'success');
+                    
+                    // Update UI with new data
+                    if (data.user) {
+                        // Update profile header
+                        const profileName = document.querySelector('.profile-info h1');
+                        const profileEmail = document.querySelector('.profile-email');
+                        if (profileName) profileName.textContent = data.user.name;
+                        if (profileEmail) profileEmail.textContent = data.user.email;
+                        
+                        // Update form values with new data
+                        formFields.forEach(field => {
+                            const input = document.getElementById(field);
+                            if (input && data.user[field]) {
+                                input.value = data.user[field];
+                                originalValues[field] = data.user[field];
+                            }
+                        });
+                        
+                        // Update avatar if new photo was uploaded
+                        if (data.user.foto) {
+                            const avatar = document.querySelector('.profile-avatar');
+                            if (avatar) {
+                                avatar.innerHTML = `<img src="/storage/${data.user.foto}" alt="Profile Photo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+                            }
+                        }
+                    }
+                    
+                    // Exit edit mode
+                    if (cancelAccountBtn) cancelAccountBtn.click();
+                } else {
+                    showMessage(data.message || 'Error updating profile', 'error');
+                    if (data.errors) {
+                        let errorMessage = '';
+                        Object.values(data.errors).forEach(error => {
+                            errorMessage += error.join(', ') + ' ';
+                        });
+                        showMessage(errorMessage, 'error');
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showMessage('An error occurred while updating profile', 'error');
+            })
+            .finally(() => {
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            });
+        });
+    }
+
+    // Handle change password modal
+    if (changePasswordBtn) {
+        changePasswordBtn.addEventListener('click', function() {
+            if (changePasswordModal) changePasswordModal.style.display = 'block';
+        });
+    }
+
+    // Handle password form submission
+    if (changePasswordForm) {
+        changePasswordForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(changePasswordForm);
+            
+            // Show loading state
+            const submitBtn = changePasswordForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Changing...';
+            submitBtn.disabled = true;
+
+            fetch('/profile/change-password', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken.getAttribute('content')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showMessage(data.message, 'success');
+                    if (changePasswordModal) changePasswordModal.style.display = 'none';
+                    changePasswordForm.reset();
+                } else {
+                    showMessage(data.message || 'Error changing password', 'error');
+                    if (data.errors) {
+                        let errorMessage = '';
+                        Object.values(data.errors).forEach(error => {
+                            errorMessage += error.join(', ') + ' ';
+                        });
+                        showMessage(errorMessage, 'error');
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showMessage('An error occurred while changing password', 'error');
+            })
+            .finally(() => {
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            });
+        });
+    }
+
+    // Close modals
+    closeModals.forEach(closeBtn => {
+        closeBtn.addEventListener('click', function() {
+            const modal = this.closest('.modal');
+            if (modal) modal.style.display = 'none';
+        });
+    });
+
+    if (cancelPasswordChange) {
+        cancelPasswordChange.addEventListener('click', function() {
+            if (changePasswordModal) changePasswordModal.style.display = 'none';
+            if (changePasswordForm) changePasswordForm.reset();
+        });
+    }
+
+    // Handle avatar upload via camera button
+    if (changeAvatarBtn && avatarUpload) {
+        changeAvatarBtn.addEventListener('click', function() {
+            avatarUpload.click();
+        });
+
+        avatarUpload.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                // Trigger edit mode and set the file
+                if (editAccountBtn) editAccountBtn.click();
+                const fotoInput = document.getElementById('foto');
+                if (fotoInput) fotoInput.files = this.files;
+                
+                // Preview the image
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const avatar = document.querySelector('.profile-avatar');
+                    if (avatar) {
+                        avatar.innerHTML = `<img src="${e.target.result}" alt="Profile Photo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+                    }
+                };
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
+    }
+
+    // Toggle password visibility
+    document.querySelectorAll('.toggle-password').forEach(button => {
+        button.addEventListener('click', function() {
+            const passwordInput = this.previousElementSibling;
+            if (passwordInput) {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                this.textContent = type === 'password' ? '👁️' : '🙈';
+            }
+        });
+    });
+
+    // Close modal when clicking outside
+    window.addEventListener('click', function(e) {
+        if (e.target.classList.contains('modal')) {
+            e.target.style.display = 'none';
+        }
+    });
+});
