@@ -7,6 +7,7 @@ use App\Models\MealPlan;
 use App\Models\Subscription;
 use App\Models\SubscriptionMeal;
 use App\Models\SubscriptionDeliveryDay;
+use App\Models\ExperienceUser;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -15,7 +16,14 @@ class RouteController extends Controller
      
     public function beranda()
     {
-        return view('pages.beranda');
+        // Ambil testimonials dari database ExperienceUser
+        $testimonials = ExperienceUser::with('user')
+            ->orderBy('star', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->take(6) // Ambil 6 testimonials terbaru dengan rating tertinggi
+            ->get();
+            
+        return view('pages.beranda', compact('testimonials'));
     }
 
     public function menu()

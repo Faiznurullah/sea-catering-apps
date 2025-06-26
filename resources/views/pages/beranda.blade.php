@@ -97,21 +97,38 @@
       <h2>What Our Customers Say</h2>
       <div class="testimonial-slider swiper">
         <div class="swiper-wrapper">
-          <div class="testimonial-card swiper-slide">
-            <div class="rating">★★★★★</div>
-            <p class="testimonial-text">"SEA Catering has transformed my busy workweeks. Healthy, delicious meals without the hassle of cooking!"</p>
-            <p class="customer-name">- Anita S.</p>
-          </div>
-          <div class="testimonial-card swiper-slide">
-            <div class="rating">★★★★★</div>
-            <p class="testimonial-text">"The variety of meals keeps things interesting, and the nutritional information helps me stay on track with my fitness goals."</p>
-            <p class="customer-name">- Budi W.</p>
-          </div>
-          <div class="testimonial-card swiper-slide">
-            <div class="rating">★★★★☆</div>
-            <p class="testimonial-text">"Great service and the meals are always fresh. I appreciate the flexibility to change my subscription when needed."</p>
-            <p class="customer-name">- Diana P.</p>
-          </div>
+          @forelse($testimonials as $testimonial)
+            <div class="testimonial-card swiper-slide">
+              <div class="rating">
+                @for($i = 1; $i <= 5; $i++)
+                  @if($i <= $testimonial->star)
+                    ★
+                  @else
+                    ☆
+                  @endif
+                @endfor
+              </div>
+              <p class="testimonial-text">"{{ $testimonial->review }}"</p>
+              <p class="customer-name">- {{ $testimonial->name }}</p>
+            </div>
+          @empty
+            <!-- Fallback testimonials jika tidak ada data -->
+            <div class="testimonial-card swiper-slide">
+              <div class="rating">★★★★★</div>
+              <p class="testimonial-text">"SEA Catering has transformed my busy workweeks. Healthy, delicious meals without the hassle of cooking!"</p>
+              <p class="customer-name">- Anita S.</p>
+            </div>
+            <div class="testimonial-card swiper-slide">
+              <div class="rating">★★★★★</div>
+              <p class="testimonial-text">"The variety of meals keeps things interesting, and the nutritional information helps me stay on track with my fitness goals."</p>
+              <p class="customer-name">- Budi W.</p>
+            </div>
+            <div class="testimonial-card swiper-slide">
+              <div class="rating">★★★★☆</div>
+              <p class="testimonial-text">"Great service and the meals are always fresh. I appreciate the flexibility to change my subscription when needed."</p>
+              <p class="customer-name">- Diana P.</p>
+            </div>
+          @endforelse
         </div>
         <!-- Swiper pagination (dots) -->
         <div class="swiper-pagination testimonial-dots"></div>

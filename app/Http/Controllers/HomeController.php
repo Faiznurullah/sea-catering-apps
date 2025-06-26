@@ -38,7 +38,9 @@ class HomeController extends Controller
             ->get();
 
         return view('home', compact('subscriptions'));
-    }    public function profile()
+    }    
+    
+    public function profile()
     {
         $user = Auth::user();
         return view('pages.profile', compact('user'));
