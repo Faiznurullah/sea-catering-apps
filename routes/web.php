@@ -37,6 +37,10 @@ Route::post('/subscription',  [RouteController::class, 'storeSubscription'])->na
 Route::get('/contact',  [ContactController::class, 'index'])->name('contact');
 Route::post('/contact',  [ContactController::class, 'store'])->name('contact.store');
 
+// TOS and Privacy Policy routes
+Route::get('/terms-of-service',  [RouteController::class, 'termsOfService'])->name('terms.of.service');
+Route::get('/privacy-policy',  [RouteController::class, 'privacyPolicy'])->name('privacy.policy');
+
 // Register Post route
 Route::post('/register', [RegisterController::class, 'register'])->name('register.store.custom');
 

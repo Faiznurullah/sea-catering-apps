@@ -90,8 +90,8 @@
 
                         <div class="form-group terms">
                             <input type="checkbox" id="terms" name="terms" required>
-                            <label for="terms">I agree to the <a href="#">Terms of Service</a> and <a
-                                    href="#">Privacy Policy</a></label>
+                            <label for="terms">I agree to the <a href="/terms-of-service">Terms of Service</a> and <a
+                                    href="/privacy-policy">Privacy Policy</a></label>
                         </div>
 
                         <button type="submit" class="btn-primary">Create Account</button>

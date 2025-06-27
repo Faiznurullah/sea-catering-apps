@@ -434,14 +434,16 @@ footer {
 }
 
 .footer-links h4,
-.footer-contact h4 {
+.footer-contact h4,
+.footer-legal h4 {
   margin-bottom: 20px;
   position: relative;
   padding-bottom: 10px;
 }
 
 .footer-links h4:after,
-.footer-contact h4:after {
+.footer-contact h4:after,
+.footer-legal h4:after {
   content: "";
   position: absolute;
   bottom: 0;
@@ -451,15 +453,18 @@ footer {
   background-color: var(--primary-color);
 }
 
-.footer-links ul li {
+.footer-links ul li,
+.footer-legal ul li {
   margin-bottom: 10px;
 }
 
-.footer-links ul li a {
+.footer-links ul li a,
+.footer-legal ul li a {
   transition: var(--transition);
 }
 
-.footer-links ul li a:hover {
+.footer-links ul li a:hover,
+.footer-legal ul li a:hover {
   color: var(--primary-color);
   padding-left: 5px;
 }
@@ -472,6 +477,18 @@ footer {
   text-align: center;
   padding-top: 20px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-bottom a {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  transition: var(--transition);
+  margin: 0 5px;
+}
+
+.footer-bottom a:hover {
+  color: var(--primary-color);
+  text-decoration: underline;
 }
 
 /* Responsive Styles */

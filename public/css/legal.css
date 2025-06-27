@@ -1,0 +1,266 @@
+/* Legal Pages Styles - Terms of Service & Privacy Policy */
+
+.page-header {
+    background: linear-gradient(135deg, #2c5530 0%, #4a7c59 100%);
+    color: white;
+    text-align: center;
+    padding: 80px 0 60px;
+    margin-bottom: 0;
+}
+
+.page-header h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.page-header p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+.legal-content {
+    padding: 60px 0;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+}
+
+.legal-container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.legal-text {
+    padding: 50px;
+}
+
+.last-updated {
+    background: #e8f5e8;
+    color: #2c5530;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 40px;
+    font-size: 0.95rem;
+    border-left: 4px solid #4a7c59;
+}
+
+.section {
+    margin-bottom: 40px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid #eee;
+}
+
+.section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.section h2 {
+    color: #2c5530;
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #4a7c59;
+    display: inline-block;
+}
+
+.section h3 {
+    color: #4a7c59;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin: 25px 0 15px;
+}
+
+.section p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #333;
+    margin-bottom: 15px;
+    text-align: justify;
+}
+
+.section ul {
+    margin: 20px 0;
+    padding-left: 0;
+}
+
+.section li {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: #444;
+    margin-bottom: 12px;
+    padding-left: 30px;
+    position: relative;
+}
+
+.section li::before {
+    content: "✓";
+    color: #4a7c59;
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 1.1rem;
+}
+
+.legal-link {
+    color: #4a7c59;
+    text-decoration: none;
+    font-weight: 600;
+    border-bottom: 1px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.legal-link:hover {
+    color: #2c5530;
+    border-bottom-color: #2c5530;
+}
+
+.agreement-section {
+    background: #f0f8f0;
+    padding: 30px;
+    border-radius: 10px;
+    border: 2px solid #4a7c59;
+    text-align: center;
+    margin-top: 30px;
+}
+
+.agreement-section p {
+    font-size: 1.15rem;
+    color: #2c5530;
+    margin: 0;
+    font-weight: 600;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .page-header {
+        padding: 60px 0 40px;
+    }
+    
+    .page-header h1 {
+        font-size: 2.2rem;
+    }
+    
+    .page-header p {
+        font-size: 1.1rem;
+        padding: 0 20px;
+    }
+    
+    .legal-text {
+        padding: 30px 25px;
+    }
+    
+    .section h2 {
+        font-size: 1.5rem;
+    }
+    
+    .section h3 {
+        font-size: 1.2rem;
+    }
+    
+    .section p {
+        font-size: 1rem;
+        text-align: left;
+    }
+    
+    .section li {
+        font-size: 1rem;
+        padding-left: 25px;
+    }
+    
+    .agreement-section {
+        padding: 20px;
+    }
+    
+    .agreement-section p {
+        font-size: 1.05rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .legal-content {
+        padding: 30px 0;
+    }
+    
+    .legal-container {
+        margin: 0 15px;
+        border-radius: 10px;
+    }
+    
+    .legal-text {
+        padding: 25px 20px;
+    }
+    
+    .page-header h1 {
+        font-size: 1.8rem;
+    }
+    
+    .section h2 {
+        font-size: 1.3rem;
+    }
+    
+    .last-updated {
+        padding: 12px 15px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .page-header {
+        background: none !important;
+        color: black !important;
+        text-shadow: none !important;
+    }
+    
+    .legal-container {
+        box-shadow: none !important;
+        border: 1px solid #ddd;
+    }
+    
+    .section {
+        page-break-inside: avoid;
+    }
+    
+    .legal-link {
+        color: black !important;
+        text-decoration: underline !important;
+    }
+}
+
+/* Accessibility Enhancements */
+.section:focus-within {
+    outline: 2px solid #4a7c59;
+    outline-offset: 5px;
+}
+
+.legal-link:focus {
+    outline: 2px solid #4a7c59;
+    outline-offset: 2px;
+}
+
+/* Smooth scrolling for internal links */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Selection styling */
+::selection {
+    background-color: #4a7c59;
+    color: white;
+}
+
+::-moz-selection {
+    background-color: #4a7c59;
+    color: white;
+}

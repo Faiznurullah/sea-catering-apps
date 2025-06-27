@@ -14,15 +14,19 @@
             <li><a href="/contact">Contact Us</a></li>
           </ul>
         </div>
+        <div class="footer-legal">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="{{ route('terms.of.service') }}">Terms of Service</a></li>
+            <li><a href="{{ route('privacy.policy') }}">Privacy Policy</a></li>
+          </ul>
+        </div>
         <div class="footer-contact">
           <h4>Contact Us</h4>
           <p>Manager: Brian</p>
           <p>Phone: 08123456789</p>
           <p>Email: info@seacatering.com</p>
         </div>
-      </div>
-      <div class="footer-bottom">
-        <p>&copy; 2025 SEA Catering. All rights reserved.</p>
-      </div>
+      </div>  
     </div>
   </footer>

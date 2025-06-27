@@ -129,5 +129,15 @@ class RouteController extends Controller
         return view('pages.contact');
     }
 
+    public function termsOfService()
+    {
+        return view('pages.terms-of-service');
+    }
+
+    public function privacyPolicy()
+    {
+        return view('pages.privacy-policy');
+    }
+
   
 }
