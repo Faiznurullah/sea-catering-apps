@@ -172,6 +172,35 @@ class HomeController extends Controller
         $contacts = Contact::orderBy('created_at', 'desc')
             ->get();
 
-        return view('pages.admin', compact('subscriptions', 'customers', 'experienceUsers', 'contacts'));
+        // Hitung distribusi plan berdasarkan data subscription aktif
+        $planDistribution = Subscription::with('mealPlan')
+            ->where('status', 'active')
+            ->get()
+            ->groupBy('meal_plan_id')
+            ->map(function($group) {
+                return [
+                    'name' => $group->first()->mealPlan->name ?? 'Unknown',
+                    'count' => $group->count()
+                ];
+            });
+
+        // Hitung total subscription aktif untuk persentase
+        $totalActiveSubscriptions = Subscription::where('status', 'active')->count();
+        
+        // Buat array untuk plan distribution dengan persentase
+        $planStats = [];
+        if ($totalActiveSubscriptions > 0) {
+            foreach ($planDistribution as $planId => $data) {
+                $percentage = round(($data['count'] / $totalActiveSubscriptions) * 100, 1);
+                $planStats[] = [
+                    'plan_id' => $planId,
+                    'name' => $data['name'],
+                    'count' => $data['count'],
+                    'percentage' => $percentage
+                ];
+            }
+        }
+
+        return view('pages.admin', compact('subscriptions', 'customers', 'experienceUsers', 'contacts', 'planStats', 'totalActiveSubscriptions'));
     }
 }

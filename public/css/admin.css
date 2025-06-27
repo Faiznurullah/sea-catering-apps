@@ -345,6 +345,13 @@
   display: flex;
   align-items: center;
   justify-content: space-around;
+  gap: 30px;
+}
+
+#planDistributionChart {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
 }
 
 .pie-chart {
@@ -362,6 +369,7 @@
   height: 100%;
   transform-origin: 50% 50%;
   transition: var(--transition);
+  opacity: 0; /* Hide segments, use canvas instead */
 }
 
 .pie-segment.diet {

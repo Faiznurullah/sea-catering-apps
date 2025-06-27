@@ -217,32 +217,50 @@
           <div class="admin-card" id="plan-distribution">
             <div class="card-header">
               <h2>Plan Distribution</h2>
+              <div class="card-header-actions">
+                <span class="badge">{{ $totalActiveSubscriptions }} Active Subscriptions</span>
+              </div>
             </div>
             <div class="card-content">
+              @if($totalActiveSubscriptions > 0)
               <div class="chart-container">
                 <div class="pie-chart-placeholder">
-                  <div class="pie-chart">
-                    <div class="pie-segment diet" style="--percentage: 35%;"></div>
-                    <div class="pie-segment protein" style="--percentage: 45%;"></div>
-                    <div class="pie-segment royal" style="--percentage: 20%;"></div>
-                  </div>
+                  <canvas id="planDistributionChart" width="200" height="200"></canvas>
                   <div class="pie-legend">
-                    <div class="legend-item">
-                      <span class="legend-color diet"></span>
-                      <span>Diet Plan (35%)</span>
-                    </div>
-                    <div class="legend-item">
-                      <span class="legend-color protein"></span>
-                      <span>Protein Plan (45%)</span>
-                    </div>
-                    <div class="legend-item">
-                      <span class="legend-color royal"></span>
-                      <span>Royal Plan (20%)</span>
-                    </div>
+                    @foreach($planStats as $plan)
+                      @php
+                        $planClass = strtolower(str_replace(' ', '-', $plan['name']));
+                        if (strpos(strtolower($plan['name']), 'diet') !== false) {
+                          $planClass = 'diet';
+                        } elseif (strpos(strtolower($plan['name']), 'protein') !== false) {
+                          $planClass = 'protein';
+                        } elseif (strpos(strtolower($plan['name']), 'royal') !== false) {
+                          $planClass = 'royal';
+                        }
+                      @endphp
+                      <div class="legend-item">
+                        <span class="legend-color {{ $planClass }}"></span>
+                        <span>{{ $plan['name'] }} ({{ $plan['percentage'] }}% - {{ $plan['count'] }} subs)</span>
+                      </div>
+                    @endforeach
                   </div>
                 </div>
-              </div>            </div>
+              </div>
+              @else
+              <div class="empty-state">
+                <div class="empty-icon">📊</div>
+                <h3>No Active Subscriptions</h3>
+                <p>No active subscriptions to display in the plan distribution chart.</p>
+              </div>
+              @endif
+            </div>
           </div>
+
+          <!-- Plan Stats Data for JavaScript -->
+          <script>
+            window.planStatsData = @json($planStats ?? []);
+            window.totalActiveSubscriptions = {{ $totalActiveSubscriptions ?? 0 }};
+          </script>
 
           <!-- Customers Section -->
           <div class="admin-card" id="customers">
@@ -639,4 +657,73 @@
 @section('javascript')
 <script src="{{ asset('js/scripts.js') }}"></script>
 <script src="{{ asset('js/admin-subscription.js') }}"></script>
+<script>
+// Plan Distribution Pie Chart
+document.addEventListener('DOMContentLoaded', function() {
+    const canvas = document.getElementById('planDistributionChart');
+    if (canvas && window.planStatsData && window.planStatsData.length > 0) {
+        const ctx = canvas.getContext('2d');
+        const data = window.planStatsData;
+        
+        // Define colors for different plans
+        const colors = {
+            'diet': '#3498db',
+            'protein': '#2ecc71', 
+            'royal': '#f1c40f',
+            'default': ['#e74c3c', '#9b59b6', '#e67e22', '#1abc9c', '#34495e']
+        };
+        
+        // Calculate angles
+        let currentAngle = -Math.PI / 2; // Start from top
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        const radius = Math.min(centerX, centerY) - 10;
+        
+        // Clear canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Draw pie slices
+        data.forEach((plan, index) => {
+            const sliceAngle = (plan.percentage / 100) * 2 * Math.PI;
+            
+            // Determine color
+            let color;
+            const planName = plan.name.toLowerCase();
+            if (planName.includes('diet')) {
+                color = colors.diet;
+            } else if (planName.includes('protein')) {
+                color = colors.protein;
+            } else if (planName.includes('royal')) {
+                color = colors.royal;
+            } else {
+                color = colors.default[index % colors.default.length];
+            }
+            
+            // Draw slice
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.arc(centerX, centerY, radius, currentAngle, currentAngle + sliceAngle);
+            ctx.closePath();
+            ctx.fillStyle = color;
+            ctx.fill();
+            
+            // Draw border
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            
+            currentAngle += sliceAngle;
+        });
+        
+        // Draw center circle for donut effect (optional)
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, 30, 0, 2 * Math.PI);
+        ctx.fillStyle = '#ffffff';
+        ctx.fill();
+        ctx.strokeStyle = '#ddd';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+    }
+});
+</script>
 @endsection
