@@ -16,6 +16,10 @@ class DatabaseSeeder extends Seeder
         $this->call([
             MealPlanSeeder::class,
             ExperienceUserSeeder::class,
+            UserSeeder::class,
         ]);
+
+        // make seeder user and admin - completed
+        
     }
 }
