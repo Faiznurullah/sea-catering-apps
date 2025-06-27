@@ -147,6 +147,9 @@
                         @if($subscription->status === 'paused' && $subscription->pause_end_date)
                           <br><small>Until {{ $subscription->pause_end_date->format('d M Y') }}</small>
                         @endif
+                        @if($subscription->status === 'rejected' && $subscription->rejection_reason)
+                          <br><small class="rejection-reason-admin">{{ $subscription->rejection_reason }}</small>
+                        @endif
                       </td>
                       <td>
                         <div class="table-actions">

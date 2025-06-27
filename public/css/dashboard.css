@@ -625,6 +625,20 @@
   color: white;
 }
 
+/* Rejection reason styling */
+.rejection-reason {
+  color: #dc3545;
+  font-weight: 500;
+  background-color: #f8d7da;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #f5c6cb;
+  display: inline-block;
+  margin-top: 5px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
 /* Action buttons styling */
 .subscription-actions {
   margin-top: 15px;

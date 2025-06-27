@@ -68,6 +68,11 @@
                         <small>({{ $subscription->pause_start_date->format('d M') }} - {{ $subscription->pause_end_date->format('d M Y') }})</small>
                       @endif
                     </p>
+                    @if($subscription->status === 'rejected' && $subscription->rejection_reason)
+                    <p><strong>Rejection Reason:</strong> 
+                      <span class="rejection-reason">{{ $subscription->rejection_reason }}</span>
+                    </p>
+                    @endif
                     @if($subscription->allergies)
                     <p><strong>Allergies:</strong> {{ $subscription->allergies }}</p>
                     @endif
